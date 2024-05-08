@@ -1,0 +1,1 @@
+# AgriSokoConnect_Frontend
