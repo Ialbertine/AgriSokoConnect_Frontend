@@ -3,7 +3,11 @@ import React from 'react'
 const Home = () => {
   return (
     <>
-        <div>Home</div>
+    <div>
+      <div className='relative'>
+        <img src='logincp.jpg' className='w-full'></img>
+      </div>
+    </div> 
     </>    
   )
 }
