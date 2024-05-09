@@ -76,7 +76,7 @@ const Home = () => {
 
       {/* COOPERATIVES */}
 
-      <div className='flex lg:flex-row md:flex-row sm:flex-col justify-evenly md:items-start sm:items-center lg:items-start py-10 lg:gap-5 md:gap-0 sm:gap-5 border border-t-2'>
+      <div className='flex lg:flex-row md:flex-row sm:flex-col justify-evenly md:items-start sm:items-center lg:items-start py-10 border border-t-2'>
         <div className='flex lg:flex-col md:flex-col sm:flex-row lg:gap-3 md:gap-3 sm:gap-5 items-center'>
           <img src='KangukaCooperative.webp' className='lg:w-32 md:w-20 sm:w-24 lg:h-32 md:h-20 sm:h-24 rounded-full'></img>
           <p className='lg:w-32 md:w-20 sm:w-20 lg:text-xl md:text-xl sm:text-lg'>Kanguka Association</p>
