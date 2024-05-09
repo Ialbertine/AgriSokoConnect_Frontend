@@ -9,11 +9,11 @@ const Header = () => {
                 <img src='logo.png' className='w-40'></img>
             </div>
             <div className='flex gap-10'>
-                <Link to='/' className=' hover:underline hover:decoration-yellow-400'> Home</Link>
-                <Link to='/about' className=' hover:underline hover:decoration-yellow-400'> About</Link>
-                <Link to='/farmers' className=' hover:underline hover:decoration-yellow-400'> Farmers</Link>
-                <Link to='/services' className=' hover:underline hover:decoration-yellow-400'> Services</Link>
-                <Link to='/contact' className=' hover:underline hover:decoration-yellow-400'> Contact</Link>
+                <Link to='/' className=' hover:underline hover:decoration-yellow-400 underline-offset-[1vh]'> Home</Link>
+                <Link to='/about' className=' hover:underline hover:decoration-yellow-400 underline-offset-[1vh]'> About</Link>
+                <Link to='/farmers' className=' hover:underline hover:decoration-yellow-400 underline-offset-[1vh]'> Farmers</Link>
+                <Link to='/services' className=' hover:underline hover:decoration-yellow-400 underline-offset-[1vh]'> Services</Link>
+                <Link to='/contact' className=' hover:underline hover:decoration-yellow-400 underline-offset-[1vh]'> Contact</Link>
             </div>
             <div>
                 <Link to='/login' className=' bg-green-900 px-3 py-1 rounded-xl text-white'> Login</Link>
