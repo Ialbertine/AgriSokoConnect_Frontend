@@ -5,7 +5,7 @@ import { IoMenu } from "react-icons/io5";
 const Header = () => {
   return (
     <>
-        <div className='flex items-center justify-around text-lg text-gray-500 py-6'>
+        <div className='flex items-center justify-around text-lg text-gray-500 py-[1vh] fixed z-10 w-full bg-white'>
             <div>
                 <img src='logo.png' className=' lg:w-40 md:w-32 sm:w-32'></img>
             </div>

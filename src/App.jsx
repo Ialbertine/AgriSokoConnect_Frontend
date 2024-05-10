@@ -6,6 +6,7 @@ import SignIn from './Authentication/SignIn'
 import SignUp from './Authentication/SignUp'
 import Forget from './Authentication/Forget'
 import Reset from './Authentication/Reset'
+import About from './Pages/About'
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
           </Route>
           <Route path="/login" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
