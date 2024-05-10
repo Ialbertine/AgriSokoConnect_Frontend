@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import axios from "axios";
+
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -24,6 +26,8 @@ const SignUp = () => {
   });
 
   const [isLoading, setLoading] = useState(false);
+  const [isSuccessMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -35,26 +39,11 @@ const SignUp = () => {
     setFormData({ ...formData, showPassword: !formData.showPassword });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const errors = {};
+    
 
-    if (Object.keys(errors).length > 0) {
-      setTimeout(() => {
-        setFormData({
-          ...formData,
-          errors: {
-            fullName: "",
-            email: "",
-            phoneNumber: "",
-            password: "",
-            confirmPassword: "",
-            userRole: "",
-            agreeTerms: "",
-          },
-        });
-      }, 2000); // Reset errors after 1 minute
-    }
+  const validateForm = () => {
+      const errors = {};
+    
 
     if (!formData.fullName) {
       errors.fullName = "Full Name is required";
@@ -70,8 +59,7 @@ const SignUp = () => {
       errors.phoneNumber = "Please enter a valid phone number";
     }
 
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex = /^(?=.*?[0-9])(?=.*?[A-Za-z]).{8,16}$/;
     if (!passwordRegex.test(formData.password)) {
       errors.password =
         "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character";
@@ -88,17 +76,46 @@ const SignUp = () => {
     if (!formData.agreeTerms) {
       errors.agreeTerms = "Please agree to terms and conditions";
     }
+    
+    setFormData({ ...formData, errors: errors });
+    return Object.keys(errors).length === 0;
 
-    setFormData({ ...formData, errors });
-    if (Object.keys(errors).length === 0) {
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(false); 
-        console.log("Form submitted successfully");
-      }, 2000);
+  }; 
+   
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
+
+    const signUpData = {
+      fullName: fullName,
+      email: email,
+      phoneNumber: phoneNumber,
+      password: password,
+      confirmPassword: confirmPassword,
+      userRole: userRole,
+    };
+
+    try {
+      const response = await axios.post(
+        "http://agrisokoconnect-wly4.onrender.com/AgriSoko/user/signup",
+        signUpData
+      );
+      setSuccessMessage("You have registered successfully!");
+      setErrorMessage("");
+      console.log(response.data); 
+    } catch (error) {
+      setErrorMessage("An error occurred while registering");
+      setSuccessMessage("");
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
-
   const isSignUpDisabled = () => {
     return Object.values(formData).some((val) => val === "" || val === false);
   };
@@ -109,14 +126,14 @@ const SignUp = () => {
      style={{ backgroundImage: "url('harvest5.jpg')" }}
    >
      <div className="w-[80%] flex flex-col lg:flex-row lg:w-[70%] rounded-2lg">
-       <div
-         className="flex-grow lg:w-[40%] shadow-md p-8 overflow-hidden"
-       >
-         <div className="flex flex-col justify-center lg:pt-[10rem]">
-           <h1 className="text-center lg:text-left text-4xl lg:text-5xl font-bold lg:pb-[1rem]">
-             AgriSoko-Connect
-           </h1>
-           <p className="text-lg mb-4 w-full">
+       <div className="flex-grow lg:w-[40%] p-8 overflow-hidden">
+         <div className="flex flex-col justify-center lg:pt-[10rem] text-[#cccbcb]">
+           <span className="text-center lg:text-left text-4xl lg:text-6xl font-bold lg:pb-[1rem] font-serif">
+             AgriSoko
+             <br />
+             <span className="text-green-900 pl-[3rem]">-Connect</span>
+           </span>
+           <p className="text-lg lg:text-xl mb-4 w-full">
              Connecting farmers, innovators, and enthusiasts to cultivate a
              sustainable future. Join us on this journey to nurture the earth
              and feed the world.
@@ -125,8 +142,15 @@ const SignUp = () => {
            {/* <img src="logo2.png" alt="AgriSoko-Connect Logo" className="w-40 mx-auto mb-4" /> */}
          </div>
        </div>
-       <div className="bg-white opacity-70 shadow-md p-8 w-[100%] lg:w-[40%] h-[70%]">
-         <h1 className="text-center text-3xl font-bold mb-4">Sign Up</h1>
+       <div className="bg-white opacity-70 shadow-2xl rounded-xl p-8 w-[100%] lg:w-[40%] h-[70%]">
+         <h1 className="text-center text-3xl font-bold mb-4 text-green-900">
+           Register Here
+         </h1>
+         <span>
+           {errorMessage && (
+             <p className="text-red-500 text-sm ml-2">{errorMessage}</p>
+           )}
+         </span>
          <form onSubmit={handleSubmit} className="flex flex-col">
            <label htmlFor="fullName">Full Name</label>
            <input
@@ -262,10 +286,17 @@ const SignUp = () => {
                  isSignUpDisabled() || isLoading ? "cursor-pointer" : ""
                }`}
                disabled={isLoading}
+               onClick={() => {
+                 setLoading(true);
+               }}
              >
                {isLoading ? "Loading..." : "Sign Up"}
              </button>
+             {errorMessage && <p className="text-red-500">{errorMessage}</p>}
            </div>
+           {isSuccessMessage && (
+             <p className="text-green-900 text-center">{isSuccessMessage}</p>
+           )}
          </form>
          <span className="flex justify-center gap-1">
            Already have an account?{" "}

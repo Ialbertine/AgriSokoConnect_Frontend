@@ -2,7 +2,10 @@ import React from 'react'
 
 const Reset = () => {
   return (
-    <div>Reset Oneeeee</div>
+    <div className=''>
+      
+
+    </div>
   )
 }
 

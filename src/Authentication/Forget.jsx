@@ -2,19 +2,35 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const SuccessPopup = ({ onClose }) => (
-  <div className="fixed inset-0 flex justify-center bg-gray-800 bg-opacity-50">
-    <div className="bg-white p-6 rounded-md shadow-md h-[20%] mt-6">
+  <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+    <div className="bg-white p-6 rounded-md shadow-md h-[20%] mt-6 relative">
+      <button onClick={onClose} className="absolute top-2 right-2 p-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-6 w-6 text-gray-500 hover:text-gray-700"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
       <div className="flex flex-col text-center">
-        <p className="text-green-600 mb-4 text-xl">
+        <p className="text-green-600 mb-4 text-xl pt-3">
           Password reset instructions sent to your email.
         </p>
-        <Link to="/login" className="text-green-900 hover:underline">
-          Return to Sign In
-        </Link>
+          <Link
+            to="https://mail.google.com/"
+            className="text-blue-900 hover:underline"
+          >
+            Check your Email to Verify
+          </Link>
       </div>
-      <button onClick={onClose} className="absolute top-0 right-0 p-2">
-        
-      </button>
     </div>
   </div>
 );
@@ -27,7 +43,7 @@ const Forgot = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    // Simulating asynchronous request
+    
     setTimeout(() => {
       setLoading(false);
       setSuccess(true);
@@ -39,8 +55,8 @@ const Forgot = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100">
-      <div className="w-full max-w-md p-6 bg-white rounded-md shadow-md">
+    <div className="min-h-screen flex justify-center items-center bg-[#9ba09b]">
+      <div className="w-full max-w-md p-6 bg-[#f5f4f3] rounded-md shadow-lg">
         <h2 className="text-2xl font-semibold text-center mb-6">
           Forgot Password
         </h2>
@@ -65,7 +81,7 @@ const Forgot = () => {
             <div className="flex justify-center">
               <button
                 type="submit"
-                className={`bg-blue-500 text-white px-4 py-2 rounded-md ${
+                className={`bg-green-900 text-white px-4 py-2 rounded-md ${
                   isLoading ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 disabled={isLoading}

@@ -9,6 +9,9 @@ const SignIn = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [isSuccessMessage, setSuccessMessage] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -43,23 +46,57 @@ const SignIn = () => {
     return isValid;
   };
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      
-      console.log(formData);
-    }
-  };
+ const handleLogin = async (e) => {
+   e.preventDefault();
+   if (validateForm()) {
+
+    setLoading(true);
+
+    const signInData = {
+      usernameOrEmail: formData.usernameOrEmail,
+      password: formData.password,
+    };
+
+     try {
+       const response = await axios.post(
+         "http://agrisokoconnect-wly4.onrender.com/AgriSoko/user/signin",
+         signInData
+       );
+       console.log(response.data);
+       if (response.status === 200) {
+         setSuccessMessage("Login successful!");
+         setErrorMessage("");
+         // after user logs in, will be directed to the dashboard message
+       }
+     } catch (error) {
+       setErrorMessage("Invalid email or password");
+       setSuccessMessage("");
+       console.error("Error:", error);
+     } finally {
+       setLoading(false);
+     }
+   } 
+ };
+
+    const isSignUpDisabled = () => {
+      return Object.values(formData).some((val) => val === "" || val === false);
+    };
+
 
   return (
     <div
       className="bg-cover bg-no-repeat min-h-screen flex items-center justify-center object-cover bg-opacity-95"
-      style={{ backgroundImage: "url('bgphoto1.jpg')" }}
+      style={{ backgroundImage: "url('harvest5.jpg')" }}
     >
       <div className="w-[60%]  bg-[#898888] opacity-70 max-w-md py-8 px-8 rounded-lg">
-        <h1 className="text-3xl font-bold pt-3 text-[#475e35de]">
+        <h1 className="text-3xl font-bold pt-3 text-green-900">
           Welcome Back
         </h1>
+        <span>
+          {isSuccessMessage && (
+            <p className="text-green-900 text-center">{isSuccessMessage}</p>
+          )}
+        </span>
         <form onSubmit={handleLogin} className="max-w-sm mx-auto mt-8">
           <div className="mb-4">
             <label htmlFor="usernameOrEmail" className="block mb-1">
@@ -119,16 +156,25 @@ const SignIn = () => {
           )}
           <div className="mb-4 text-sm">
             <span>
-            <Link to="/forget" className="text-green-900 hover:underline font-medium">
-              Forgot password?
-            </Link>
+              <Link
+                to="/forget"
+                className="text-green-900 hover:underline font-medium"
+              >
+                Forgot password?
+              </Link>
             </span>
           </div>
           <button
             type="submit"
-            className="w-full  bg-green-900 text-white py-2 rounded-md hover:bg-[#378000] transition duration-300 mb-3"
+            className={`w-full  bg-green-900 text-white py-2 rounded-md hover:bg-[#378000] transition duration-300 mb-3 ${
+              isSignUpDisabled() || isLoading ? "cursor-pointer" : ""
+            }`}
+            disabled={isLoading}
+            onClick={() => {
+              setLoading(true);
+            }}
           >
-            Login
+            {isLoading ? "Loading..." : "Sign In"}
           </button>
           <div className="flex items-center justify-center pb-3">
             <hr className="w-[40%] border-[1px]" />
@@ -136,8 +182,8 @@ const SignIn = () => {
             <hr className="w-[40%] border-[1px]" />
           </div>
           <div className="flex items-center justify-center pb-2">
-            <button className="px-[3rem] border flex justify-center items-center gap-2  text-white py-2 rounded-md hover:bg-[#586958] transition duration-300">
-              <img src="google.png" alt="" className="w-9" />
+            <button className="px-[1.5rem] border flex justify-center items-center gap-2  text-white py-2 rounded-md hover:bg-[#586958] transition duration-300">
+              <img src="google.png" alt="" className="w-7" />
               <p>Log in with Google</p>
             </button>
           </div>
