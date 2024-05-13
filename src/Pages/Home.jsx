@@ -1,8 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { PiArrowBendDownLeftThin } from "react-icons/pi";
-import About from './About';
-
+import { MdOutlineFacebook } from "react-icons/md";
+import { FaTwitter } from "react-icons/fa6";
+import { FaInstagram } from "react-icons/fa6";
+import { FaPinterestP } from "react-icons/fa";
 
 const Home = () => {
   return (
@@ -50,34 +52,34 @@ const Home = () => {
         {/* VIDEO */}
 
         <div>
-          
+
         </div>
 
 
         {/* MISSION, VISION & VALUES */}
 
-        <div className='flex items-center justify-center gap-20 text-white px-40 py-20 bg-cover bg-no-repeat'
+        <div className='flex lg:flex-row md:flex-col sm:flex-col items-center justify-evenly text-white px-40 py-20 bg-cover bg-no-repeat lg:pl-32 md:pl-0 sm:pl-10'
           style={{ backgroundImage: "url('Mission.jpg')" }}
         >
-          <div className='flex flex-col gap-7'>
+          <div className='flex flex-col gap-7 md:pl-0 lg:pl-0 sm:pl-32 mb-10'>
             <p className='text-2xl'>MISSION</p>
             <div>
-              <p className='border-r-2 border-gray-400 w-[50vh] text-lg pr-5'>create a transparent, efficient, and inclusive agricultural marketplace that connects farmers, buyers,
+              <p className=' lg:border-r-2 border-gray-400 lg:w-[50vh] md:w-[60vh] sm:w-[40vh] text-lg pr-5'>create a transparent, efficient, and inclusive agricultural marketplace that connects farmers, buyers,
                 and other stakeholders, enabling fair and profitable transactions while promoting sustainability
                 and economic growth in rural communities.
               </p>
             </div>
 
           </div>
-          <div className='flex flex-col gap-7'>
-            <p className='text-2xl'>VISION</p>
-            <p className='border-r-2 border-gray-400 w-[50vh] text-lg pr-5'>
+          <div className='flex flex-col gap-7 sm:pl-16 mb-10'>
+            <p className='text-2xl md:pl-0 sm:pl-7'>VISION</p>
+            <p className='lg:border-r-2 border-gray-400 lg:w-[50vh] md:w-[70vh] sm:w-[40vh] lg:pl-0 md:pl-0 sm:pl-8 text-lg pr-5'>
               revolutionize agricultural trade by leveraging technology to bridge the gap
               between producers and consumers, ensuring food security, empowering farmers, and fostering prosperity
               across the agricultural value chain.
             </p>
           </div>
-          <div className='flex flex-col gap-7'>
+          <div className='flex flex-col gap-7 lg:mt-0 md:mt-0 sm:mt-10'>
             <p className='text-2xl'>VALUES</p>
             <div>
               <ol className=' text-lg'>
@@ -94,11 +96,11 @@ const Home = () => {
 
         <div>
           <div className='flex lg:flex-row md:flex-col sm:flex-col lg:items-start md:items-center sm:items-center justify-evenly py-24 bg-[#6d8c54]'>
-            <div className=' flex flex-col gap-3'>
+            <div className=' flex flex-col gap-3 mb-10'>
               <p>OUR TESTINOMIALS</p>
               <p className='text-4xl lg:w-80 md:w-[96vh] sm:w-[40vh]'> What did AgriSoko Connect change to your harvest sale?</p>
             </div>
-            <div className='lg:w-80 md:w-[96vh] sm:w-[40vh] lg:h-80 md:h-60 sm:h-[60vh] p-10 flex flex-col gap-5 border bg-white'>
+            <div className=' mb-5 lg:w-80 md:w-[96vh] sm:w-[40vh] lg:h-80 md:h-60 sm:h-[60vh] p-10 flex flex-col gap-5 border rounded-lg bg-white'>
               <p>"With AgriSoko Connect, I sold my extra bags of potatoes effortlessly. The platform connected me with buyers in no time,
                 making the whole process smooth and stress-free."
               </p>
@@ -111,7 +113,7 @@ const Home = () => {
               </div>
             </div>
 
-            <div className='lg:w-80 md:w-[96vh] sm:w-[40vh] lg:h-80 md:h-60 sm:h-[60vh] p-10 flex flex-col gap-5 border bg-white'>
+            <div className=' mb-5 lg:w-80 md:w-[96vh] sm:w-[40vh] lg:h-80 md:h-60 sm:h-[60vh] p-10 flex flex-col gap-5 border rounded-lg bg-white'>
               <p>"I never thought selling our surplus onions could be so easy until we tried AgriSoko Connect. Listing them on the platform was a breeze,
                 and we had interested buyers reaching out to us within hours!"
               </p>
@@ -157,6 +159,43 @@ const Home = () => {
             <img src='MilleniumCooperative.jpg' className='lg:w-32 md:w-20 sm:w-24 lg:h-32 md:h-20 sm:h-24 rounded-full object-cover'></img>
             <p className='lg:w-32 md:w-20 sm:w-20 lg:text-xl md:text-xl sm:text-lg'>Millenium Village Tour</p>
           </div>
+        </div>
+
+        {/* GET IN TOUCH */}
+
+        <div>
+          <div className='flex lg:flex-row md:flex-col sm:flex-col justify-evenly py-28  bg-[#f2f2f2]'>
+            <div className='lg:w-[44vh] md:w-[80vh] mb-10 sm:w-[44vh] flex flex-col lg:p-0 md:p-0 sm:p-3 gap-3  lg:ml-0 md:ml-20 sm:ml-7'>
+              <p className=''>Contact now</p>
+              <p className='text-5xl text-green-900'>Get in touch with us</p>
+              <p className=''>our contact information reflects our commitment to providing excellent
+                customer service and support to all users of our AgriSoko connect platform. Feel free to
+                reach out to us with any questions or needs you may have.
+              </p>
+              <div className='flex gap-3'>
+                <div className='rounded-full bg-[#eae5cb] flex items-center justify-center w-11 h-11 opacity-60 text-2xl'><FaTwitter /></div>
+                <div className='rounded-full bg-[#eae5cb] flex items-center justify-center w-11 h-11 opacity-60 text-2xl'><MdOutlineFacebook /></div>
+                <div className='rounded-full bg-[#eae5cb] flex items-center justify-center w-11 h-11 opacity-60 text-2xl'><FaPinterestP /></div>
+                <div className='rounded-full bg-[#eae5cb] flex items-center justify-center w-11 h-11 opacity-60 text-2xl'><FaInstagram /></div>
+              </div>
+            </div>
+            <div className='flex flex-col gap-5 lg:ml-0 md:ml-20 sm:ml-7'>
+              <div className='flex lg:flex-row md:flex-col sm:flex-col gap-5'>
+                <input type='text' placeholder='Names' className='bg-[#eceae0] rounded-xl p-5 lg:w-[40vh] md:w-[80vh] sm:w-[40vh]'></input>
+                <input type='email' placeholder='Email' className='bg-[#eceae0] rounded-xl p-5 lg:w-[40vh] md:w-[80vh] sm:w-[40vh]'></input>
+              </div>
+              <div className='flex lg:flex-row md:flex-col sm:flex-col gap-5 '>
+                <input type='phone' placeholder='Phone number' className='bg-[#eceae0] rounded-xl p-5 lg:w-[40vh] md:w-[80vh] sm:w-[40vh]'></input>
+                <input type='text' placeholder='Subject' className='bg-[#eceae0] rounded-xl p-5 lg:w-[40vh] md:w-[80vh] sm:w-[40vh]'></input>
+              </div>
+              <div>
+                <textarea placeholder='Write message' className='bg-[#eceae0] rounded-xl p-2 lg:w-[83vh] md:w-[80vh] sm:w-[40vh] h-[30vh]'></textarea>
+              </div>
+              <Link to='/login' className=' bg-yellow-200 px-5 py-3 lg:w-[23vh] md:w-[27vh] sm:w-[27vh] text-xl rounded-xl text-black hover:text-white hover:bg-green-900'> Send message</Link>
+
+            </div>
+          </div>
+
         </div>
 
       </div>

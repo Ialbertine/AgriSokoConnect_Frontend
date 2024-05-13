@@ -31,28 +31,28 @@ const About = () => {
                         </div>
                     </div>
                 </div>
-                <div className='flex items-center justify-center gap-20 text-white px-40 py-20 bg-cover bg-no-repeat'
+                <div className='flex lg:flex-row md:flex-col sm:flex-col items-center justify-evenly text-white px-40 py-20 bg-cover bg-no-repeat lg:pl-32 md:pl-0 sm:pl-10'
                     style={{ backgroundImage: "url('Mission.jpg')" }}
                 >
-                    <div className='flex flex-col gap-7'>
+                    <div className='flex flex-col gap-7 md:pl-0 lg:pl-0 sm:pl-32 mb-10'>
                         <p className='text-2xl'>MISSION</p>
                         <div>
-                            <p className='border-r-2 border-gray-400 w-[50vh] text-lg pr-5'>create a transparent, efficient, and inclusive agricultural marketplace that connects farmers, buyers,
+                            <p className=' lg:border-r-2 border-gray-400 lg:w-[50vh] md:w-[60vh] sm:w-[40vh] text-lg pr-5'>create a transparent, efficient, and inclusive agricultural marketplace that connects farmers, buyers,
                                 and other stakeholders, enabling fair and profitable transactions while promoting sustainability
                                 and economic growth in rural communities.
                             </p>
                         </div>
 
                     </div>
-                    <div className='flex flex-col gap-7'>
-                        <p className='text-2xl'>VISION</p>
-                        <p className='border-r-2 border-gray-400 w-[50vh] text-lg pr-5'>
+                    <div className='flex flex-col gap-7 sm:pl-16 mb-10'>
+                        <p className='text-2xl md:pl-0 sm:pl-7'>VISION</p>
+                        <p className='lg:border-r-2 border-gray-400 lg:w-[50vh] md:w-[70vh] sm:w-[40vh] lg:pl-0 md:pl-0 sm:pl-8 text-lg pr-5'>
                             revolutionize agricultural trade by leveraging technology to bridge the gap
                             between producers and consumers, ensuring food security, empowering farmers, and fostering prosperity
                             across the agricultural value chain.
                         </p>
                     </div>
-                    <div className='flex flex-col gap-7'>
+                    <div className='flex flex-col gap-7 lg:mt-0 md:mt-0 sm:mt-10'>
                         <p className='text-2xl'>VALUES</p>
                         <div>
                             <ol className=' text-lg'>
