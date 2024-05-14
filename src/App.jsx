@@ -6,6 +6,7 @@ import SignIn from './Authentication/SignIn'
 import SignUp from './Authentication/SignUp'
 import Forget from './Authentication/Forget'
 import Reset from './Authentication/Reset'
+import Otp from './Authentication/Otp'
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path='/forget' element= {<Forget />} />
           <Route path='/reset' element= {<Reset />} />
+          <Route path='/otp' element= {<Otp />} />
         </Routes>
       </Router>
     </>

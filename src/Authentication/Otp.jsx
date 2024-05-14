@@ -3,10 +3,9 @@ import axios from "axios";
 
 const OTP = ({ onSubmit }) => {
   const [otp, setOTP] = useState(["", "", "", "", "", ""]);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0); 
+  const [isLoading, setIsLoading] = useState(false); 
+  const [errorMessage, setErrorMessage] = useState(""); 
 
   const handleChange = (index, value) => {
     if (value.length <= 1 && value.match(/[0-9]/)) {
@@ -60,7 +59,6 @@ const OTP = ({ onSubmit }) => {
       console.log(response);
 
       onSubmit(response.data);
-      setShowSuccessModal(true); // Show the success modal
     } catch (error) {
       console.error("Error:", error.response.data);
       setErrorMessage(
@@ -69,11 +67,6 @@ const OTP = ({ onSubmit }) => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleCloseModal = () => {
-    setShowSuccessModal(false);
-    window.location.href = "/sign-in"; // Redirect to sign-in page
   };
 
   return (
@@ -114,26 +107,6 @@ const OTP = ({ onSubmit }) => {
           </div>
         </form>
       </div>
-
-      {showSuccessModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-md shadow-md text-center">
-            <h3 className="text-xl font-semibold mb-4">
-              Verification Successful
-            </h3>
-            <p className="mb-4">
-              You have successfully verified your account. Go to the sign-in
-              page.
-            </p>
-            <button
-              className="bg-green-900 text-white px-6 py-2 rounded-md"
-              onClick={handleCloseModal}
-            >
-              OK
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
