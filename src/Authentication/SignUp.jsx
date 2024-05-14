@@ -25,8 +25,8 @@ const SignUp = () => {
   });
 
   const [isLoading, setLoading] = useState(false);
-  const [isSuccessMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  
+
 
   const passwordVisibility = () => {
     setShowPassword(!showPassword);
@@ -75,7 +75,10 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setLoading(true);
+
     if (!validateForm()) {
+      setLoading(false);
       return;
     }
     try {
@@ -90,16 +93,17 @@ const SignUp = () => {
           role: role,
         }
       );
-      console.log("response", response);
-      navigate("/otp");
+
+      if (response.status === 200 || response.status === 201) {
+        console.log("Signup successful:", response.data);
+        navigate("/otp");
+      }
     } catch (error) {
-      console.error(error);
-      setErrorMessage(error.response.data);
+      console.error("Error during signup:", error);
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   };
-
   return (
     <div
       className="w-full min-h-screen flex justify-center items-center bg-cover bg-no-repeat bg-opacity-50 object-cover"
@@ -124,11 +128,7 @@ const SignUp = () => {
           <h1 className="text-center text-3xl font-bold mb-4 text-green-900">
             Register Here
           </h1>
-          {/* <span>
-            {errorMessage && (
-              <p className="text-red-500 text-sm ml-2">{errorMessage}</p>
-            )}
-          </span> */}
+        
           <form onSubmit={handleSubmit} className="flex flex-col">
             <label htmlFor="fullName">Full Name</label>
             <input
@@ -256,14 +256,13 @@ const SignUp = () => {
               <button
                 type="submit"
                 className="bg-green-900 hover:bg-[#378000] text-white font-bold py-2 px-4 rounded-md w-[50%]"
+                disabled={isLoading}
               >
-                Sign Up
+                {isLoading ? "Loading..." : "Sign Up"}{" "}
+               
               </button>
-              
+             
             </div>
-            {isSuccessMessage && (
-              <p className="text-green-900 text-center">{isSuccessMessage}</p>
-            )}
           </form>
           <span className="flex justify-center gap-1">
             Already have an account?{" "}

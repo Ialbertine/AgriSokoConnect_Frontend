@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const OTP = ({ onSubmit }) => {
@@ -6,7 +7,7 @@ const OTP = ({ onSubmit }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (index, value) => {
     if (value.length <= 1 && value.match(/[0-9]/)) {
@@ -60,7 +61,7 @@ const OTP = ({ onSubmit }) => {
       console.log(response);
 
       onSubmit(response.data);
-      setShowSuccessModal(true); // Show success modal on successful verification
+      navigate("/login");
     } catch (error) {
       console.error("Error:", error.response.data);
       setErrorMessage(
@@ -70,7 +71,6 @@ const OTP = ({ onSubmit }) => {
       setIsLoading(false);
     }
   };
-
   return (
     <div className="min-h-screen flex justify-center items-center bg-[#000000a7]">
       <div className="w-full max-w-md p-6 bg-white rounded-md shadow-md">
@@ -109,24 +109,6 @@ const OTP = ({ onSubmit }) => {
           </div>
         </form>
       </div>
-
-      {/* Success Modal */}
-      {showSuccessModal && (
-        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-gray-500 bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-md shadow-md">
-            <p className="text-lg font-semibold mb-4">
-              Verification Successful!
-            </p>
-            <p className="mb-4">Your account has been successfully verified.</p>
-            <p
-              className="text-blue-500 cursor-pointer"
-              onClick={() => setShowSuccessModal(false)}
-            >
-              Click here to sign in.
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
