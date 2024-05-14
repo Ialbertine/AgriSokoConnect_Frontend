@@ -1,13 +1,31 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
+
+const SuccessPopup = ({ onClose }) => (
+  <div className="fixed inset-0 flex justify-center bg-gray-800 bg-opacity-50">
+    <div className="bg-white p-6 rounded-md shadow-md h-[20%] mt-6">
+      <div className="flex flex-col text-center">
+        <p className="text-green-600 mb-4 text-xl">
+          Account verified successfully!
+        </p>
+        <p className=" flex" onClick={onClose}>
+          Click here to
+          <Link to="/login" className="text-blue-500 hover:underline">
+            sign in
+          </Link>
+        </p>
+      </div>
+    </div>
+  </div>
+);
 
 const OTP = ({ onSubmit }) => {
   const [otp, setOTP] = useState(["", "", "", "", "", ""]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const handleChange = (index, value) => {
     if (value.length <= 1 && value.match(/[0-9]/)) {
@@ -58,10 +76,8 @@ const OTP = ({ onSubmit }) => {
         { otp: otpValue }
       );
 
-      console.log(response);
-
       onSubmit(response.data);
-      navigate("/login");
+      setShowSuccessModal(true);
     } catch (error) {
       console.error("Error:", error.response.data);
       setErrorMessage(
@@ -71,6 +87,11 @@ const OTP = ({ onSubmit }) => {
       setIsLoading(false);
     }
   };
+
+  const closeModal = () => {
+    setShowSuccessModal(false);
+  };
+
   return (
     <div className="min-h-screen flex justify-center items-center bg-[#000000a7]">
       <div className="w-full max-w-md p-6 bg-white rounded-md shadow-md">
@@ -109,6 +130,9 @@ const OTP = ({ onSubmit }) => {
           </div>
         </form>
       </div>
+
+      {/* Success Modal */}
+      {showSuccessModal && <SuccessPopup onClose={closeModal} />}
     </div>
   );
 };

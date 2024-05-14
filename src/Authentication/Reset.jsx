@@ -29,7 +29,7 @@ const Reset = () => {
 
     axios
       .post(
-        "http://agrisokoconnect-wly4.onrender.com/AgriSoko/user/resetPassword",
+        "https://agrisokoconnect-wly4.onrender.com/AgriSoko/user/resetPassword",
         {
           password: password,
           confirmPassword: confirmPassword,

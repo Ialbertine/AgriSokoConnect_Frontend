@@ -32,7 +32,7 @@ const Forgot = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://agrisokoconnect-wly4.onrender.com/AgriSoko/user/forgotPassword",
+        "https://agrisokoconnect-wly4.onrender.com/AgriSoko/user/forgotPassword",
         { email }
       );
       if (response.status === 200) {
