@@ -9,6 +9,11 @@ import Reset from './Authentication/Reset'
 import About from './Pages/About'
 import Contact from './Pages/Contact'
 import Services from './Pages/Services'
+import Farmers from './Pages/Farmers'
+import Navbar from './Dashboard/Navbar'
+import FirstPage from './Dashboard/Admin/FirstPage'
+import Cooperatives from './Dashboard/Admin/Cooperatives'
+import Operation from './Dashboard/Admin/Operation'
 
 const App = () => {
   return (
@@ -19,13 +24,21 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/farmers" element={<Farmers />} />
             <Route path="/services" element={<Services />} />
           </Route>
           <Route path="/login" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path='/forget' element= {<Forget />} />
           <Route path='/reset' element= {<Reset />} />
+        
+          <Route path='/dashboard' element={<Navbar></Navbar>}>
+            <Route path='/dashboard/admin' element={<FirstPage/>}/>
+            <Route path='/dashboard/Cooperatives' element={<Cooperatives/>}/>
+            <Route path='/dashboard/operations' element={<Operation/>}/>
+          </Route>
         </Routes>
+        
       </Router>
     </>
   );
