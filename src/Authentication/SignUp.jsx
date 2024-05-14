@@ -259,7 +259,7 @@ const SignUp = () => {
               >
                 Sign Up
               </button>
-              {/* {errorMessage && <p className="text-red-500">{errorMessage}</p>} */}
+              
             </div>
             {isSuccessMessage && (
               <p className="text-green-900 text-center">{isSuccessMessage}</p>
