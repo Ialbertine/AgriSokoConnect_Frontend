@@ -33,7 +33,14 @@ const App = () => {
           <Route path='/forget' element= {<Forget />} />
           <Route path='/reset' element= {<Reset />} />
           <Route path='/otp' element= {<Otp />} />
+
+          <Route path="/dashboard" element={<Navbar></Navbar>}>
+            <Route path="/dashboard/admin" element={<FirstPage/>}/>
+            <Route path="/dashboard/Cooperatives" element={<Cooperatives/>}/>
+            <Route path="/dashboard/operations" element={<Operation/>}/>
+          </Route>
         </Routes>
+
         
       </Router>
     </>
