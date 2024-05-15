@@ -128,7 +128,7 @@ const SignUp = () => {
           <h1 className="text-center text-3xl font-bold mb-4 text-green-900">
             Register Here
           </h1>
-        
+
           <form onSubmit={handleSubmit} className="flex flex-col">
             <label htmlFor="fullName">Full Name</label>
             <input
@@ -259,9 +259,7 @@ const SignUp = () => {
                 disabled={isLoading}
               >
                 {isLoading ? "Loading..." : "Sign Up"}{" "}
-               
               </button>
-             
             </div>
           </form>
           <span className="flex justify-center gap-1">
