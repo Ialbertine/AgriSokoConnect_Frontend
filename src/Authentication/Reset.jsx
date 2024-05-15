@@ -39,7 +39,7 @@ const Reset = () => {
         if (response.status === 200) {
           setLoading(false);
           setSuccess(true);
-          // Reset form fields
+          
           setPassword("");
           setConfirmPassword("");
         } else {
