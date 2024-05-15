@@ -50,7 +50,7 @@ const Forgot = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100">
+    <div className="min-h-screen flex justify-center items-center bg-[#000000c6]">
       <div className="w-full max-w-md p-6 bg-white rounded-md shadow-md ">
         <h2 className="text-2xl font-semibold text-center mb-6">
           Forgot Password
