@@ -1,15 +1,45 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { IoMdStats } from "react-icons/io";
+import { GrGroup } from "react-icons/gr";
+import { PiTreeView } from "react-icons/pi";
+import { SlSettings } from "react-icons/sl";
+import { RiLogoutCircleLine } from "react-icons/ri";
 
 function SideBar() {
-  return (
-        <div className='flex flex-col px-10 py-20 gap-5 text-2xl text-green-900 w-[30vh] border-r-2 h-[99vh]'>
-            <Link to='/dashboard/admin' className='  px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'>Dashboard</Link>
-            <Link to='/dashboard/Cooperatives' className='  px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'>Cooperatives</Link>
-            <Link to='/dashboard/operations' className='  px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'>Operations</Link>
-            <Link to='' className='  px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'>Settings</Link>
-        </div>
-  )
+    return (
+        <>
+
+            <div className=' flex flex-col justify-between text-2xl text-green-900 border-r-2 shadow-xl px-5 py-10 h-[100vh]'>
+                <div className='flex flex-col gap-5 w-[30vh]'>
+                    <div className='w-40 h-20'>
+                        <img src="../logo.png" alt="logo" />
+                    </div>
+                    <div className='flex items-center gap-5'>
+
+                        <Link to='/dashboard/admin' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><IoMdStats /><button>Dashboard</button></Link>
+                    </div>
+                    <div className='flex items-center gap-5'>
+
+                        <Link to='/dashboard/Cooperatives' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><GrGroup /><button>Cooperatives</button></Link>
+                    </div>
+                    <div className='flex items-center gap-5'>
+
+                        <Link to='/dashboard/operations' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><PiTreeView /><button>Operations</button></Link>
+                    </div>
+                </div>
+                <div className='flex flex-col gap-2'>
+                    <div className='flex items-center gap-5'>
+                        <Link to='/dashboard/setting' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><SlSettings /><button>Settings</button></Link>
+                    </div>
+                    <div className='flex items-center gap-5'>
+                        <Link to='/login' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><RiLogoutCircleLine /><button>Log Out</button></Link>
+                    </div>
+                </div>
+
+            </div>
+        </>
+    )
 }
 
 export default SideBar
