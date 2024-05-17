@@ -6,6 +6,7 @@ import SignIn from './Authentication/SignIn'
 import SignUp from './Authentication/SignUp'
 import Forget from './Authentication/Forget'
 import Reset from './Authentication/Reset'
+import Otp from './Authentication/Otp'
 import About from './Pages/About'
 import Contact from './Pages/Contact'
 import Services from './Pages/Services'
@@ -55,9 +56,16 @@ const App = () => {
             <Route path='/dashboard/uploadproduct' element={<UploadProduct/>}/>
             <Route path='/dashboard/profile' element={<Profile/>}/>
             <Route path='/dashboard/stock' element={<Stock/>}/>
+          <Route path='/otp' element= {<Otp />} />
+
+          <Route path="/dashboard" element={<Navbar></Navbar>}>
+            <Route path="/dashboard/admin" element={<FirstPage/>}/>
+            <Route path="/dashboard/Cooperatives" element={<Cooperatives/>}/>
+            <Route path="/dashboard/operations" element={<Operation/>}/>
           </Route>
 
         </Routes>
+
         
       </Router>
     </>
