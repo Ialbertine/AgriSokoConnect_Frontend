@@ -1,14 +1,14 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-import SideBar from './SideBar'
+import FarmerSideBar from './FarmerSideBar'
 
-const Navbar = (props) => {
+const FarmerLayout = (props) => {
   return (
     <div className='flex'>
       <div className=' fixed' >
-        <SideBar />
+        <FarmerSideBar />
       </div>
-      <section className='w-[96rem]  pl-[36vh]'>
+      <section className='w-[96rem]  pl-[42vh]'>
         <Outlet/>
         {props.children}
       </section>
@@ -16,4 +16,4 @@ const Navbar = (props) => {
   )
 }
 
-export default Navbar
+export default FarmerLayout

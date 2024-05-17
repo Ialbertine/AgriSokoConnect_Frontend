@@ -10,7 +10,11 @@ export default {
       'md':'768px',
       'lg':'1024px'
     },
-    extend: {},
+    extend: {
+      animation: {
+        'spin': 'spin 2s linear infinite',
+      }
+    },
   },
   plugins: [],
 }
