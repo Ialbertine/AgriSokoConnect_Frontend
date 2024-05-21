@@ -26,6 +26,16 @@ import Profile from './Dashboard/Farmer/Profile'
 import FarmerLayout from './Dashboard/Farmer/FarmerLayout'
 import Stock from './Dashboard/Farmer/Stock'
 
+import BuyerLayout from './Dashboard/Buyer/BuyerLayout'
+import BLandingPage from './Dashboard/Buyer/BLandingPage'
+import AllOrders from './Dashboard/Buyer/AllOrders'
+import Create from './Dashboard/Buyer/Create'
+import ViewOrder from './Dashboard/Buyer/ViewOrder'
+import Support from './Dashboard/Buyer/Support' 
+import BuyerProfile from './Dashboard/Buyer/Profile'
+
+
+
 const App = () => {
   return (
     <>
@@ -40,33 +50,36 @@ const App = () => {
           </Route>
           <Route path="/login" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path='/forget' element= {<Forget />} />
-          <Route path='/reset' element= {<Reset />} />
-        
-          <Route path='/dashboard' element={<Navbar></Navbar>}>
-            <Route path='/dashboard/admin' element={<FirstPage/>}/>
-            <Route path='/dashboard/Cooperatives' element={<Cooperatives/>}/>
-            <Route path='/dashboard/operations' element={<Operation/>}/>
-            <Route path='/dashboard/operations/orderDetails' element={<OneOrderDetails/>}/>
-            <Route path='/dashboard/setting' element={<Setting/>}/>
-          </Route>
-          <Route path='/dashboard' element={<FarmerLayout></FarmerLayout>}>
-            <Route path='/dashboard/farmer' element={<LandingPage/>}/>
-            <Route path='/dashboard/orders' element={<ReceivedOrders/>}/>
-            <Route path='/dashboard/uploadproduct' element={<UploadProduct/>}/>
-            <Route path='/dashboard/profile' element={<Profile/>}/>
-            <Route path='/dashboard/stock' element={<Stock/>}/>
-          <Route path='/otp' element= {<Otp />} />
+          <Route path="/forget" element={<Forget />} />
+          <Route path="/reset" element={<Reset />} />
+          <Route path="/otp" element={<Otp />} />
 
           <Route path="/dashboard" element={<Navbar></Navbar>}>
-            <Route path="/dashboard/admin" element={<FirstPage/>}/>
-            <Route path="/dashboard/Cooperatives" element={<Cooperatives/>}/>
-            <Route path="/dashboard/operations" element={<Operation/>}/>
+            <Route path="/dashboard/admin" element={<FirstPage />} />
+            <Route path="/dashboard/Cooperatives" element={<Cooperatives />} />
+            <Route path="/dashboard/operations" element={<Operation />} />
+            <Route path="/dashboard/operations/orderDetails" element={<OneOrderDetails />} />
+            <Route path="/dashboard/setting" element={<Setting />} />
+          </Route>
+
+          <Route path="/dashboard" element={<FarmerLayout></FarmerLayout>}>
+            <Route path="/dashboard/farmer" element={<LandingPage />} />
+            <Route path="/dashboard/orders" element={<ReceivedOrders />} />
+            <Route path="/dashboard/uploadproduct" element={<UploadProduct />} />
+            <Route path="/dashboard/profile" element={<Profile />} />
+            <Route path="/dashboard/stock" element={<Stock />} />
+          </Route>
+
+          <Route path="/dashboard" element={<BuyerLayout></BuyerLayout>}>
+            <Route path="/dashboard/buyer" element={<BLandingPage />} />
+            <Route path="/dashboard/allorders" element={<AllOrders />} />
+            <Route path="/dashboard/create" element={<Create />} />
+            <Route path="/dashboard/buyerprofile" element={<BuyerProfile />} />
+            <Route path="/dashboard/view" element={<ViewOrder />} />
+            <Route path="/dashboard/support" element={<Support />} />
           </Route>
 
         </Routes>
-
-        
       </Router>
     </>
   );

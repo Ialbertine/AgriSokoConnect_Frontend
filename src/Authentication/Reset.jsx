@@ -29,7 +29,7 @@ const Reset = () => {
 
     axios
       .post(
-        "https://agrisokoconnect-wly4.onrender.com/AgriSoko/user/resetPassword",
+        "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/user/resetPassword",
         {
           password: password,
           confirmPassword: confirmPassword,
@@ -39,7 +39,7 @@ const Reset = () => {
         if (response.status === 200) {
           setLoading(false);
           setSuccess(true);
-          
+
           setPassword("");
           setConfirmPassword("");
         } else {

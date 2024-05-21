@@ -1,31 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const SuccessPopup = ({ onClose }) => (
-  <div className="fixed inset-0 flex justify-center bg-gray-800 bg-opacity-50">
-    <div className="bg-white p-6 rounded-md shadow-md h-[20%] mt-6">
-      <div className="flex flex-col text-center">
-        <p className="text-green-600 mb-4 text-xl">
-          Account verified successfully!
-        </p>
-        <p className=" flex" onClick={onClose}>
-          Click here to
-          <Link to="/login" className="text-blue-500 hover:underline">
-            sign in
-          </Link>
-        </p>
-      </div>
-    </div>
-  </div>
-);
-
-const OTP = ({ onSubmit }) => {
+const Otp = () => {
   const [otp, setOTP] = useState(["", "", "", "", "", ""]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (index, value) => {
     if (value.length <= 1 && value.match(/[0-9]/)) {
@@ -72,24 +54,24 @@ const OTP = ({ onSubmit }) => {
     const otpValue = otp.join("");
     try {
       const response = await axios.post(
-        "https://agrisokoconnect-wly4.onrender.com/AgriSoko/user/verify",
+        "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/user/verify",
         { otp: otpValue }
       );
 
-      onSubmit(response.data);
-      setShowSuccessModal(true);
+      
+      navigate("/login");
     } catch (error) {
-      console.error("Error:", error.response.data);
-      setErrorMessage(
-        error.response.data.message || "OTP verification failed."
-      );
+      console.error("Error:", error.response);
+      if (error.response && error.response.status === 400) {
+        setErrorMessage("Failed to verify OTP. Please try again.");
+      } else {
+        setErrorMessage(
+          "An unexpected error occurred. Please try again later."
+        );
+      }
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const closeModal = () => {
-    setShowSuccessModal(false);
   };
 
   return (
@@ -113,12 +95,14 @@ const OTP = ({ onSubmit }) => {
                 onKeyDown={(e) => handleKeyPress(index, e)}
                 onFocus={() => handleFocus(index)}
                 autoFocus={index === activeIndex}
+                
               />
             ))}
           </div>
           {errorMessage && (
             <div className="text-red-500 text-center mt-2">{errorMessage}</div>
           )}
+          
           <div className="flex justify-center mt-4">
             <button
               type="submit"
@@ -130,11 +114,8 @@ const OTP = ({ onSubmit }) => {
           </div>
         </form>
       </div>
-
-      {/* Success Modal */}
-      {showSuccessModal && <SuccessPopup onClose={closeModal} />}
     </div>
   );
 };
 
-export default OTP;
+export default Otp;

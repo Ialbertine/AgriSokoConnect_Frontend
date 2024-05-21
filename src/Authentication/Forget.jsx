@@ -1,22 +1,22 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 
 const SuccessPopup = ({ onClose }) => (
-  <div className="fixed inset-0 flex justify-center bg-gray-800 bg-opacity-50">
-    <div className="bg-white p-6 rounded-md shadow-md h-[20%] mt-6">
+  <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50">
+    <div className="bg-white p-6 rounded-md shadow-md h-[20%] mt-6 relative">
       <div className="flex flex-col text-center">
         <p className="text-green-600 mb-4 text-xl">
           Password reset instructions sent to your email.
         </p>
-        <Link
-          to="https://mail.google.com/"
+        <a
+          href="https://mail.google.com/"
+          target="_blank"
+          rel="noopener noreferrer"
           className="text-green-900 hover:underline"
         >
-          check you email to verify
-        </Link>
+          Check your email to verify
+        </a>
       </div>
-      <button onClick={onClose} className="absolute top-0 right-0 p-2"></button>
     </div>
   </div>
 );
@@ -30,18 +30,21 @@ const Forgot = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
+
     try {
       const response = await axios.post(
-        "https://agrisokoconnect-wly4.onrender.com/AgriSoko/user/forgotPassword",
+        "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/user/forgotPassword",
         { email }
       );
-      if (response.status === 200) {
-        setLoading(false);
+
+      if (response.status === 200 && response.data.success) {
         setSuccess(true);
-      }
+      } 
     } catch (error) {
-      setLoading(false);
       setError("An error occurred. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,7 +54,7 @@ const Forgot = () => {
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-[#000000c6]">
-      <div className="w-full max-w-md p-6 bg-white rounded-md shadow-md ">
+      <div className="w-full max-w-md p-6 bg-white rounded-md shadow-md">
         <h2 className="text-2xl font-semibold text-center mb-6">
           Forgot Password
         </h2>

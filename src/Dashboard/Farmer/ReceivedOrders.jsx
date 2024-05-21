@@ -122,7 +122,6 @@ const ReceivedOrders = () => {
                         display: "flex",
                         flexDirection: "column",
                         margin: "16 0 0 20",
-                        padding: "0",
                         backgroundColor: "white",
                         padding:"40px",
                     }}
