@@ -5,64 +5,66 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    rememberMe: false,
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
 
   const [errors, setErrors] = useState({});
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value, checked, type } = e.target;
-    const newValue = type === "checkbox" ? checked : value;
-    setFormData({ ...formData, [name]: newValue });
-  };
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    
     if (!validateForm()) return;
 
     setIsSubmitting(true);
+    setErrorMessage("");
+    setSuccessMessage("");
 
     try {
       const response = await axios.post(
-        "https://agrisokoconnect-wly4.onrender.com/AgriSoko/user/signin",
+        "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/user/signin",
         {
-          email: formData.email,
-          password: formData.password,
+          email,
+          password,
         }
       );
 
-      if (response.data.success) {
-        const { role } = response.data;
+      console.log("Response data: ", response.data);
 
-        setIsLoggedIn(true);
+      // Extract role data from the response
+      const { role, token } = response.data;
+      console.log(role)  
+      // Store token and role in local storage
+      localStorage.setItem("token", token);
+      localStorage.setItem("userRole", role);
 
-        switch (role) {
-          case "farmer":
-            navigate("/dashboard/farmer");
-            break;
-          case "buyer":
-            navigate("/dashboard/buyer");
-            break;
-          case "government":
-            navigate("/dashboard/government");
-            break;
-          default:
-            navigate("/dashboard");
-        }
-      } else {
-        setErrorMessage("Invalid username or password. Please try again.");
+      // Redirect user based on role
+      let redirectPath;
+      if (role === "admin") {
+        redirectPath = "/dashboard/admin";
+      } else if (role === "farmer") {
+        redirectPath = "/dashboard/farmer";
+      } else if (role === "buyer") {
+        redirectPath = "/dashboard/buyer";
+      } else if (role === "government") {
+        redirectPath = "/dashboard/government";
       }
+
+      navigate(redirectPath);
     } catch (error) {
-      console.error(error);
-      setErrorMessage("An error occurred. Please try again later.");
+      console.error("Login error: ", error.response || error.message);
+      setErrorMessage(
+        error.response && error.response.status === 401
+          ? "Invalid username or password. Please try again."
+          : "An error occurred. Please try again later."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -72,21 +74,16 @@ const SignIn = () => {
     let isValid = true;
     const newErrors = {};
 
-    if (!formData.email.trim()) {
+    if (!email.trim()) {
       newErrors.email = "Email is required";
       isValid = false;
     }
 
-    if (!formData.password.trim()) {
+    if (!password.trim()) {
       newErrors.password = "Password is required";
       isValid = false;
-    } else if (formData.password.length < 8) {
+    } else if (password.length < 8) {
       newErrors.password = "Password must be at least 8 characters";
-      isValid = false;
-    }
-
-    if (!formData.rememberMe) {
-      newErrors.rememberMe = "Please agree to the terms and conditions";
       isValid = false;
     }
 
@@ -103,14 +100,10 @@ const SignIn = () => {
       className="bg-cover bg-no-repeat min-h-screen flex items-center justify-center object-cover bg-opacity-95"
       style={{ backgroundImage: "url('harvest5.jpg')" }}
     >
-      <div className="w-[60%]  bg-[#bfc0bf] opacity-70 max-w-md py-8 px-8 rounded-lg">
+      <div className="w-[60%] bg-[#bfc0bf] opacity-70 max-w-md py-8 px-8 rounded-lg">
         <h1 className="text-3xl font-bold pt-3 text-green-800 ">
           Welcome Back
         </h1>
-        {isLoggedIn && (
-          <span className="text-green-600 ml-2 text-xl">Login Successful!</span>
-        )}
-
         <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-8">
           <div className="mb-4">
             <label htmlFor="usernameOrEmail" className="block mb-1">
@@ -120,8 +113,8 @@ const SignIn = () => {
               type="email"
               id="email"
               name="email"
-              value={formData.email}
-              onChange={handleChange}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
               className={`w-full px-3 py-2 border-[1px] border-[#9e9e9e] hover:shadow-sm hover:shadow-black rounded-md focus:outline-none focus:border-black ${
                 errors.email ? "border-red-500" : ""
@@ -139,10 +132,12 @@ const SignIn = () => {
               type={showPassword ? "text" : "password"}
               id="password"
               name="password"
-              value={formData.password}
-              onChange={handleChange}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 rounded-md border-[1px] border-[#9e9e9e] hover:shadow-sm hover:shadow-black focus:outline-none focus:ring-1 focus:ring-black"
+              className={`w-full px-3 py-2 rounded-md border-[1px] border-[#9e9e9e] hover:shadow-sm hover:shadow-black focus:outline-none focus:ring-1 focus:ring-black ${
+                errors.password ? "border-red-500" : ""
+              }`}
             />
             <span
               onClick={passwordVisibility}
@@ -159,8 +154,8 @@ const SignIn = () => {
               type="checkbox"
               id="rememberMe"
               name="rememberMe"
-              checked={formData.rememberMe}
-              onChange={handleChange}
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
               className="mr-2"
             />
             <label htmlFor="rememberMe" className="text-sm font-medium">
@@ -168,9 +163,19 @@ const SignIn = () => {
             </label>
           </div>
 
-          {errors.rememberMe && (
-            <p className="text-red-500 text-xs mb-2">{errors.rememberMe}</p>
+          {errorMessage && (
+            <p className="text-red-500 text-xs mb-2">{errorMessage}</p>
           )}
+          {successMessage && (
+            <p className="text-green-500 text-xs mb-2">{successMessage}</p>
+          )}
+          <button
+            type="submit"
+            className="w-full bg-green-900 text-white py-2 rounded-md hover:bg-[#378000] transition duration-300 mb-3"
+          >
+            {isSubmitting ? "Loading..." : "Login"}
+          </button>
+
           <div className="mb-4 text-sm">
             <span>
               <Link
@@ -181,15 +186,6 @@ const SignIn = () => {
               </Link>
             </span>
           </div>
-          {errorMessage && (
-            <p className="text-red-500 text-xs mb-2">{errorMessage}</p>
-          )}
-          <button
-            type="submit"
-            className="w-full  bg-green-900 text-white py-2 rounded-md hover:bg-[#378000] transition duration-300 mb-3"
-          >
-            {isSubmitting ? "Loading..." : "Login"}
-          </button>
 
           <div className="flex items-center justify-center pb-3">
             <hr className="w-[40%] border-[1px]" />
@@ -199,7 +195,7 @@ const SignIn = () => {
           <div className="flex items-center justify-center pb-2">
             <button
               type="button"
-              className="px-[1.5rem] border flex justify-center items-center gap-2 text-black shadow-sm shadow-slate-800 hover:text-white hover:border-[#526152] py-2 rounded-md hover:bg-[#555855]  transition duration-300"
+              className="px-[1.5rem] border flex justify-center items-center gap-2 text-black shadow-sm shadow-slate-800 hover:text-white hover:border-[#526152] py-2 rounded-md hover:bg-[#555855] transition duration-300"
             >
               <img src="google.png" alt="" className="w-7" />
               <p>Log in with Google</p>
