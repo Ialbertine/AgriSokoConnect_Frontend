@@ -14,6 +14,7 @@ const SignUp = () => {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const [generalError, setGeneralError] = useState("");
   const [errors, setErrors] = useState({
     fullName: "",
     email: "",
@@ -83,7 +84,7 @@ const SignUp = () => {
     }
     try {
       const response = await axios.post(
-        "https://agrisokoconnect-wly4.onrender.com/AgriSoko/user/signup",
+        "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/user/signup",
         {
           fullName: fullName,
           email: email,
@@ -99,9 +100,14 @@ const SignUp = () => {
         navigate("/otp");
       }
     } catch (error) {
-      console.error("Error during signup:", error);
+      if (error.response && error.response.status === 409) {
+        setGeneralError("Email is already in use. Please sign in.");
+      } else {
+        console.error("Error during signup:", error);
+        setGeneralError("An error occurred during signup. Please try again.");
+      }
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
   return (
@@ -267,7 +273,7 @@ const SignUp = () => {
             <Link to="/login" className="text-green-900">
               Sign In
             </Link>
-          </span>
+          </span> 
         </div>
       </div>
     </div>
