@@ -58,7 +58,7 @@ const Otp = () => {
         { otp: otpValue }
       );
 
-      
+      // after successfully verified you account navigate to the login
       navigate("/login");
     } catch (error) {
       console.error("Error:", error.response);
