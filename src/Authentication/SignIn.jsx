@@ -11,16 +11,21 @@ const SignIn = () => {
 
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    
     if (!validateForm()) return;
 
     setIsSubmitting(true);
     setErrorMessage("");
+    setSuccessMessage("");
 
     try {
       const response = await axios.post(
@@ -33,21 +38,26 @@ const SignIn = () => {
 
       console.log("Response data: ", response.data);
 
-      if (response.data.success) {
-        const { role } = response.data;
+      // Extract role data from the response
+      const { role, token } = response.data;
+      console.log(role)  
+      // Store token and role in local storage
+      localStorage.setItem("token", token);
+      localStorage.setItem("userRole", role);
 
-        console.log("User role: ", role);
+      // Redirect user based on role
+      let redirectPath;
+      if (role === "admin") {
+        redirectPath = "/dashboard/admin";
+      } else if (role === "farmer") {
+        redirectPath = "/dashboard/farmer";
+      } else if (role === "buyer") {
+        redirectPath = "/dashboard/buyer";
+      } else if (role === "government") {
+        redirectPath = "/dashboard/government";
+      }
 
-        if (role === "admin") {
-          navigate("/dashboard/admin");
-        } else if (role === "farmer") {
-          navigate("/dashboard/farmer");
-        } else if (role === "buyer") {
-          navigate("/dashboard/buyer");
-        } else if (role === "government") {
-          navigate("/dashboard/government");
-        }
-      } 
+      navigate(redirectPath);
     } catch (error) {
       console.error("Login error: ", error.response || error.message);
       setErrorMessage(
@@ -155,6 +165,9 @@ const SignIn = () => {
 
           {errorMessage && (
             <p className="text-red-500 text-xs mb-2">{errorMessage}</p>
+          )}
+          {successMessage && (
+            <p className="text-green-500 text-xs mb-2">{successMessage}</p>
           )}
           <button
             type="submit"
