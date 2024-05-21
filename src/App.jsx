@@ -42,6 +42,7 @@ const App = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path='/forget' element= {<Forget />} />
           <Route path='/reset' element= {<Reset />} />
+          <Route path='/otp' element= {<Otp />} />
         
           <Route path='/dashboard' element={<Navbar></Navbar>}>
             <Route path='/dashboard/admin' element={<FirstPage/>}/>
@@ -50,19 +51,15 @@ const App = () => {
             <Route path='/dashboard/operations/orderDetails' element={<OneOrderDetails/>}/>
             <Route path='/dashboard/setting' element={<Setting/>}/>
           </Route>
+
           <Route path='/dashboard' element={<FarmerLayout></FarmerLayout>}>
             <Route path='/dashboard/farmer' element={<LandingPage/>}/>
             <Route path='/dashboard/orders' element={<ReceivedOrders/>}/>
             <Route path='/dashboard/uploadproduct' element={<UploadProduct/>}/>
             <Route path='/dashboard/profile' element={<Profile/>}/>
             <Route path='/dashboard/stock' element={<Stock/>}/>
-          <Route path='/otp' element= {<Otp />} />
-
-          <Route path="/dashboard" element={<Navbar></Navbar>}>
-            <Route path="/dashboard/admin" element={<FirstPage/>}/>
-            <Route path="/dashboard/Cooperatives" element={<Cooperatives/>}/>
-            <Route path="/dashboard/operations" element={<Operation/>}/>
           </Route>
+          
 
         </Routes>
 

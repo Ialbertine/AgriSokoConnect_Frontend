@@ -1,8 +1,34 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, Tooltip, XAxis } from 'recharts'
+import { CountBuyers, CountFarmers } from './Apis';
 
 const FirstPage = () => {
+
+    const [farmers, setFarmers] = useState([]);
+    const [buyers, setBuyers] = useState([]);
+
+    useEffect(() =>{
+        CountFarmers()
+        .then((response) =>{
+            console.log(response);
+            setFarmers(response);
+        })
+        .catch((error) =>{
+            console.log(error);
+        })
+    })
+
+    useEffect(() =>{
+        CountBuyers()
+        .then((response) =>{
+            console.log(response);
+            setBuyers(response);
+        })
+        .catch((error) =>{
+            console.log(error);
+        })
+    })
 
     const data = [
         {

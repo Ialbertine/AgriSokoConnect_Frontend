@@ -1,13 +1,36 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import { FetchFarmers } from './Apis';
 
 const Cooperatives = () => {
+
+  const [farmers, setFarmers] = useState([]);
+
+  const getToken = () =>{
+    const token = localStorage.getItem('token');
+    console.log('token: ', token);
+    return token;
+  }
+
+  useEffect(()=>{
+    FetchFarmers()
+    .then((response) =>{
+      console.log('fetch farmers')
+      console.log(response);
+      setFarmers(response);
+    })
+    .catch((error) => {
+      // console.log('before network error')
+      console.log(error);
+    })
+  }, [])
   return (
     <>
       <div className='p-10 flex flex-col gap-5 bg-[#f2f2f2]'>
         <div className='mb-5'>
           <strong className='text-xl'>MANAGE FARMERS (Cooperative)</strong>
         </div>
-        <div className='flex flex-wrap gap-4'>
+        {/* <div className='flex flex-wrap gap-4'>
           <div className='w-[20rem] flex flex-col gap-5'>
             <img src='../Tuzamurane.jpg' className='rounded-lg w-[19rem] h-[12rem]'></img>
             <div>
@@ -47,7 +70,7 @@ const Cooperatives = () => {
               <button className='text-white rounded-lg px-3 bg-[#269553] hover:bg-[#2d7a4a] p-1'>Suspend</button>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   )
