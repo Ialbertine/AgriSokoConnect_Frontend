@@ -4,7 +4,7 @@ import Navbar from '../Dashboard/Navbar'
 const Farmers = () => {
   return (
     <>
-    <Navbar/>
+    {/* <Navbar/> */}
     </>
   )
 }

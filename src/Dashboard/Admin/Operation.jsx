@@ -1,8 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { VscLoading } from "react-icons/vsc";
+// import axios from 'axios';
+import { FetchOrders } from './Apis';
 
 const Operation = () => {
+
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() =>{
+      FetchOrders()
+      .then((response) =>{
+        console.log(response);
+        setOrders(response);
+      })
+      .catch((error) =>{
+        console.log(error);
+      })
+    }, [])
+
+
+
 
   const RecentOrderData = [
     {
