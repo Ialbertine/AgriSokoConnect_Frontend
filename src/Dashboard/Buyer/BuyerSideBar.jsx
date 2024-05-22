@@ -26,7 +26,7 @@ function BuyerSideBar() {
           </div>
           <div className="flex items-center gap-5">
             <Link
-              to="/dashboard/allorders"
+              to="/dashboard/buyer/allorders"
               className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
             >
               <MdOutlineAddShoppingCart />
@@ -35,7 +35,7 @@ function BuyerSideBar() {
           </div>
           <div className="flex items-center gap-5">
             <Link
-              to="/dashboard/create"
+              to="/dashboard/buyer/create"
               className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
             >
               <RiFolderUploadLine />
@@ -44,7 +44,7 @@ function BuyerSideBar() {
           </div>
           <div className="flex items-center gap-5">
             <Link
-              to="/dashboard/"
+              to="/dashboard/buyer/stock"
               className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
             >
               <PiPlantFill />
@@ -55,7 +55,7 @@ function BuyerSideBar() {
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-5">
             <Link
-              to="/dashboard/buyerprofile"
+              to="/buyerprofile"
               className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
             >
               <CgProfile />
@@ -73,7 +73,7 @@ function BuyerSideBar() {
           </div>
           <div className="flex items-center gap-5">
             <Link
-              to="/dashboard/support"
+              to="/dashboard/buyer/support"
               className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
             >
               <RiLogoutCircleLine />

@@ -22,20 +22,20 @@ function FarmerSideBar() {
                     </div>
                     <div className='flex items-center gap-5'>
 
-                        <Link to='/dashboard/orders' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><MdOutlineAddShoppingCart /><button>Received Orders</button></Link>
+                        <Link to='/dashboard/farmer/orders' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><MdOutlineAddShoppingCart /><button>Received Orders</button></Link>
                     </div>
                     <div className='flex items-center gap-5'>
 
-                        <Link to='/dashboard/uploadproduct' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><RiFolderUploadLine /><button>Upload my Harvest</button></Link>
+                        <Link to='/dashboard/farmer/uploadproduct' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><RiFolderUploadLine /><button>Upload my Harvest</button></Link>
                     </div>
                     <div className='flex items-center gap-5'>
 
-                        <Link to='/dashboard/stock' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><PiPlantFill /><button>Stock</button></Link>
+                        <Link to='/dashboard/farmer/stock' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><PiPlantFill /><button>Stock</button></Link>
                     </div>
                 </div>
                 <div className='flex flex-col gap-2'>
                     <div className='flex items-center gap-5'>
-                        <Link to='/dashboard/profile' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><CgProfile /><button>Profile</button></Link>
+                        <Link to='/dashboard/farmer/profile' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><CgProfile /><button>Profile</button></Link>
                     </div>
                     <div className='flex items-center gap-5'>
                         <Link to='/login' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><RiLogoutCircleLine /><button>Log Out</button></Link>
