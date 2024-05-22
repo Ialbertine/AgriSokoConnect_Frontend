@@ -53,42 +53,48 @@ const App = () => {
         <Route path="/reset" element={<Reset />} />
         <Route path="/otp" element={<Otp />} />
 
-        <Route path="/dashboard" element={<Navbar />}>
+        <Route path="dashboard">
           <Route
             path="admin"
             element={<ProtectedRoute allowedRoles={["admin"]} />}
           >
-            <Route path="" element={<FirstPage />} />
-            <Route path="cooperatives" element={<Cooperatives />} />
-            <Route path="operations" element={<Operation />} />
-            <Route
-              path="operations/orderDetails"
-              element={<OneOrderDetails />}
-            />
-            <Route path="setting" element={<Setting />} />
+            <Route element={<Navbar />}>
+              <Route path="" element={<FirstPage />} />
+              <Route path="cooperatives" element={<Cooperatives />} />
+              <Route path="operations" element={<Operation />} />
+              <Route
+                path="operations/orderDetails"
+                element={<OneOrderDetails />}
+              />
+              <Route path="setting" element={<Setting />} />
+            </Route>
           </Route>
 
           <Route
             path="farmer"
             element={<ProtectedRoute allowedRoles={["farmer"]} />}
           >
-            <Route path="" element={<LandingPage />} />
-            <Route path="orders" element={<ReceivedOrders />} />
-            <Route path="uploadproduct" element={<UploadProduct />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="stock" element={<Stock />} />
+            <Route element={<FarmerLayout />}>
+              <Route path="" element={<LandingPage />} />
+              <Route path="orders" element={<ReceivedOrders />} />
+              <Route path="uploadproduct" element={<UploadProduct />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="stock" element={<Stock />} />
+            </Route>
           </Route>
 
           <Route
             path="buyer"
             element={<ProtectedRoute allowedRoles={["buyer"]} />}
           >
-            <Route path="" element={<BLandingPage />} />
-            <Route path="allorders" element={<AllOrders />} />
-            <Route path="create" element={<Create />} />
-            <Route path="profile" element={<BuyerProfile />} />
-            <Route path="view" element={<ViewOrder />} />
-            <Route path="support" element={<Support />} />
+            <Route path="" element={<BuyerLayout />}>
+              <Route path="" element={<BLandingPage />} />
+              <Route path="allorders" element={<AllOrders />} />
+              <Route path="create" element={<Create />} />
+              <Route path="profile" element={<BuyerProfile />} />
+              <Route path="view" element={<ViewOrder />} />
+              <Route path="support" element={<Support />} />
+            </Route>
           </Route>
         </Route>
       </Routes>
