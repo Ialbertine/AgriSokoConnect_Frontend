@@ -17,20 +17,20 @@ function SideBar() {
                     </div>
                     <div className='flex items-center gap-5'>
 
-                        <Link to='admin' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><IoMdStats /><button>Dashboard</button></Link>
+                        <Link to='/dashboard/admin' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><IoMdStats /><button>Dashboard</button></Link>
                     </div>
                     <div className='flex items-center gap-5'>
 
-                        <Link to='admin/cooperatives' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><GrGroup /><button>Cooperatives</button></Link>
+                        <Link to='/dashboard/admin/Cooperatives' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><GrGroup /><button>Cooperatives</button></Link>
                     </div>
                     <div className='flex items-center gap-5'>
 
-                        <Link to='admin/operations' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><PiTreeView /><button>Operations</button></Link>
+                        <Link to='/dashboard/admin/operations' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><PiTreeView /><button>Operations</button></Link>
                     </div>
                 </div>
                 <div className='flex flex-col gap-2'>
                     <div className='flex items-center gap-5'>
-                        <Link to='admin/setting' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><SlSettings /><button>Settings</button></Link>
+                        <Link to='/dashboard/admin/setting' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><SlSettings /><button>Settings</button></Link>
                     </div>
                     <div className='flex items-center gap-5'>
                         <Link to='/login' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><RiLogoutCircleLine /><button>Log Out</button></Link>
