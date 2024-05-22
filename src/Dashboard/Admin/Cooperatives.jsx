@@ -1,29 +1,43 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { FetchFarmers } from './Apis';
 
 const Cooperatives = () => {
 
   const [farmers, setFarmers] = useState([]);
+  const [token, setToken] = useState();
 
   const getToken = () =>{
-    const token = localStorage.getItem('token');
-    console.log('token: ', token);
-    return token;
+    const Token = localStorage.getItem('token');
+    console.log('token: ', Token);
+    setToken(Token);
   }
 
-  useEffect(()=>{
-    FetchFarmers()
+  useEffect(() =>{
+    getToken();
+  }, [])
+
+  const FetchFarmers =() =>{
+    axios ({
+      method:'GET',
+      url:'http://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/admin/farmers',
+      headers:{
+        Accept:'application/json',
+        Authorization:`Bearer ${token}`
+      }
+    })
     .then((response) =>{
-      console.log('fetch farmers')
       console.log(response);
       setFarmers(response);
     })
-    .catch((error) => {
-      // console.log('before network error')
-      console.log(error);
+    .catch((err) =>{
+      console.log(err);
     })
+  }
+
+  useEffect(() =>{
+    FetchFarmers();
   }, [])
+
   return (
     <>
       <div className='p-10 flex flex-col gap-5 bg-[#f2f2f2]'>

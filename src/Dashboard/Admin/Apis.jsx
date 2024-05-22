@@ -1,16 +1,17 @@
 import axios from "axios";
 const API = import.meta.env.VITE_BASE_API;
 
-export const FetchFarmers = () => {
-    return axios.get("https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/admin/farmers")
-        .then((response) => {
-            return response.data.farmers;
-        })
-        .catch((err) => {
-            console.log(err);
-            throw err;
-        });
-};
+// export const FetchFarmers = () => {
+//     return axios.get("https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/admin/farmers")
+//         .then((response) => {
+//             console.log('fetch farmers')
+//             return response.data.result;
+//         })
+//         .catch((err) => {
+//             console.log(err);
+//             throw err;
+//         });
+// };
 
 export const CountFarmers = () => {
     return axios.get("https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/admin/totalFarmer")
