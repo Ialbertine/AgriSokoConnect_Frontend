@@ -60,8 +60,6 @@ const BLandingPage = () => {
 
   return (
     <div className="landing-page bg-gray-100">
-      {error && <div>Error: {error}</div>}{" "}
-      {/* Render error message if an error occurs */}
       <div className="relative">
         <img
           src="../AboutUs.png"
@@ -72,6 +70,7 @@ const BLandingPage = () => {
           <p className="text-4xl font-bold">Buyer Dashboard</p>
         </div>
       </div>
+      {error && <div>Error: {error}</div>}{" "}
       <div>{/* description content of the page here */}</div>
       <div className="m-4">
         <input

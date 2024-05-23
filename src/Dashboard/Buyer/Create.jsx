@@ -1,49 +1,109 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Create = () => {
+  const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
   const [quality, setQuality] = useState("");
   const [unit, setUnit] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [shippingAddress, setShippingAddress] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handlePayment = async () => {
+    try {
+      // Retrieve token from local storage
+      const token = localStorage.getItem("token");
+      console.log("Token:", token);
 
-    // validation for the order
-    let isValid = true;
-    setErrorMessage("");
+      // Check if token exists
+      if (!token) {
+        throw new Error("No token found");
+      }
 
-    if (quantity < 1 || !Number.isInteger(quantity)) {
-      isValid = false;
-      setErrorMessage("Please enter a valid quantity (positive integer).");
-    }
+      // Make a GET request to retrieve stock with authorization header
+      // const stockResponse = await axios.get(
+      //   "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/stock/retrieve",
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   }
+      // );
 
-    if (quality.trim() === "") {
-      isValid = false;
-      setErrorMessage("Please enter the product quality.");
-    }
+      // Make a GET request to the payment endpoint with authorization header
+      const paymentResponse = await axios.get(
+        "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/pay/momo",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    if (phoneNumber.trim() === "") {
-      isValid = false;
-      setErrorMessage("Please enter your phone number.");
-    }
+      // If requests succeed, proceed with payment
+      console.log("Payment response:", paymentResponse);
 
-    if (shippingAddress.trim() === "") {
-      isValid = false;
-      setErrorMessage("Please enter your shipping address.");
+      // Open payment URL in a new tab/window
+      window.open(
+        "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/pay/momo",
+        "_blank",
+        "noopener noreferrer"
+      );
+    } catch (error) {
+      console.error("Error:", error.message);
+      throw new Error("Payment failed"); // Throw an error to be caught by the handleSubmit function
     }
   };
+const handleSubmit = async (event) => {
+  event.preventDefault();
+
+  // Validation for the order
+  let isValid = true;
+  setErrorMessage("");
+
+  if (quantity < 1 || !Number.isInteger(quantity)) {
+    isValid = false;
+    setErrorMessage("Please enter a valid quantity (positive integer).");
+  }
+
+  if (quality.trim() === "") {
+    isValid = false;
+    setErrorMessage("Please enter the product quality.");
+  }
+
+  if (phoneNumber.trim() === "") {
+    isValid = false;
+    setErrorMessage("Please enter your phone number.");
+  }
+
+  if (shippingAddress.trim() === "") {
+    isValid = false;
+    setErrorMessage("Please enter your shipping address.");
+  }
+
+  // If order is valid, proceed to payment
+  if (isValid) {
+    try {
+      await handlePayment(); // Call handlePayment function
+      // If payment is successful, navigate to success page or display success message
+    } catch (error) {
+      console.error("Error:", error.message);
+      setErrorMessage("Payment failed. Please try again."); // Display error message to user
+    }
+  }
+};
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen w-full">
       <h1 className="text-2xl font-bold mb-4">Create New Order</h1>
 
-      {/* {errorMessage && (
-       <div className="text-red-500 font-bold mb-4">{errorMessage}</div>
-     )} */}
+      {errorMessage && (
+        <div className="text-red-500 font-bold mb-4">{errorMessage}</div>
+      )}
 
       <form onSubmit={handleSubmit} className="w-[80%] lg:w-[50%]">
         <div className="mb-3 w-full">
@@ -133,20 +193,22 @@ const Create = () => {
           />
         </div>
         <div className="flex gap-5">
-          <Link to="/ishyura">
-            <button
-              type="submit"
-              className="bg-green-900 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:ring-1 focus:ring-offset-2"
-            >
-              Proceed for Payment
-            </button>
-          </Link>
           <button
-            type="submit"
+            type="button" // Change the type to "button" to prevent form submission
+            onClick={handleSubmit} // Call the handleSubmit function when clicked
             className="bg-green-900 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:ring-1 focus:ring-offset-2"
           >
-            Back
+            Proceed for Payment
           </button>
+
+          <Link to="/">
+            <button
+              type="button"
+              className="bg-green-900 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:ring-1 focus:ring-offset-2"
+            >
+              Back
+            </button>
+          </Link>
         </div>
       </form>
     </div>

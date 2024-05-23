@@ -62,8 +62,8 @@ const SignIn = () => {
       console.error("Login error: ", error.response || error.message);
       setErrorMessage(
         error.response && error.response.status === 401
-          ? "Invalid username or password. Please try again."
-          : "An error occurred. Please try again later."
+          ? "An error occured, please try again"
+          : "Invalid username or password. Please try again."
       );
     } finally {
       setIsSubmitting(false);
