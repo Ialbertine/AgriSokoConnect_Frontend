@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { DataGrid } from "@mui/x-data-grid";
 import { Button, TextField, IconButton } from "@mui/material";
@@ -7,78 +7,134 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
+
+
 const AllOrder = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [orders, setOrders] = useState([
-    {
-      id: 1,
-      productName: "Apple (Red Delicious)",
-      quantity: 5,
-      quality: "Organic",
-      phoneNumber: "+250788773366",
-      shippingAddress: "Kigali, KN 4 Ave, 74",
-      Date: new Date().toISOString().split("T")[0],
-      status: "pending",
-      price: 10, // example price
-    },
-    {
-      id: 2,
-      productName: "Mango",
-      quantity: 3,
-      quality: "Fresh",
-      phoneNumber: "+250738992211",
-      shippingAddress: "Kigali City Tower, KN 2 St.",
-      Date: new Date().toISOString().split("T")[0],
-      status: "delivered",
-      price: 15,
-    },
-    {
-      id: 3,
-      productName: "ibirayi",
-      quantity: 3,
-      quality: "kinigi",
-      phoneNumber: "+250738992211",
-      shippingAddress: "Kigali City Tower, KN 2 St.",
-      Date: new Date().toISOString().split("T")[0],
-      status: "pending",
-      price: 20,
-    },
-  ]);
+  const [orders, setOrders] = useState([]);
   const [editingOrderId, setEditingOrderId] = useState(null);
-  const [editedOrder, setEditedOrder] = useState(null);
+  const [editedOrder, setEditedOrder] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  // Function to handle the search
+  useEffect(() => {
+    const fetchOrders = async () => {
+      setIsLoading(true);
+      try {
+        const token = localStorage.getItem("token");
+        console.log("Token:", token);
+
+        if (!token) {
+          throw new Error("No token found");
+        }
+
+        const response = await fetch(
+          "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/retrieve",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch orders: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log("Fetched Orders:", data); 
+
+        
+        if (data.orders && Array.isArray(data.orders)) {
+          setOrders(data.orders);
+        } else {
+          throw new Error("Invalid data format received");
+        }
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(
+        `https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/delete/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to delete order");
+      }
+      setOrders((prevOrders) => prevOrders.filter((order) => order.id !== id));
+    } catch (error) {
+      console.error("Error deleting order:", error);
+      setError(error.message);
+    }
+  };
+
+  const handleEdit = (id) => {
+    setEditingOrderId(id);
+    const order = orders.find((order) => order.id === id);
+    setEditedOrder(order);
+  };
+
+  const handleSaveEdit = async () => {
+    try {
+      const response = await fetch(
+        `https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/update ${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editedOrder),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update order");
+      }
+      const updatedOrder = await response.json();
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === editingOrderId ? updatedOrder : order
+        )
+      );
+      setEditingOrderId(null);
+      setEditedOrder({});
+    } catch (error) {
+      console.error("Error updating order:", error); 
+      setError(error.message);
+    }
+  };
+
+  const handleEditOrderData = (field, value) => {
+    setEditedOrder((prevEditedOrder) => ({
+      ...prevEditedOrder,
+      [field]: value,
+    }));
+  };
+
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
   };
 
-  // Function to handle the delete for the order
-  const handleDelete = (id) => {
-    // setOrders(orders.filter((order) => order.id !== id));
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
   };
 
-  // Function to handle the edit of the order
-  const handleEdit = (id) => {
-    setEditingOrderId(id);
-    const orderToEdit = orders.find((order) => order.id === id);
-    setEditedOrder(orderToEdit);
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
-
-  // Function to handle editing of order data
-  const handleEditOrderData = (field, value) => {
-    setEditedOrder({
-      ...editedOrder,
-      [field]: value,
-    });
-  };
-
-  // Function to handle viewing the order details
-//   const handleView = (id) => {
-//     // Navigate to the view page for the order with the specified id
-//     console.log(`View order with id ${id}`);
-//   };
 
   const columns = [
     { field: "id", headerName: "ID", width: 50 },
@@ -90,7 +146,6 @@ const AllOrder = () => {
     { field: "Date", headerName: "Date", width: 110 },
     { field: "status", headerName: "Status", width: 120 },
     { field: "price", headerName: "Price", width: 120 },
-
     {
       field: "actions",
       headerName: "Actions",
@@ -103,7 +158,7 @@ const AllOrder = () => {
           <IconButton onClick={() => handleEdit(params.row.id)}>
             <EditIcon color="primary" />
           </IconButton>
-          <IconButton onClick={() => handleView(params.row.id)}>
+          <IconButton>
             <VisibilityIcon color="primary" />
           </IconButton>
         </>
@@ -111,17 +166,11 @@ const AllOrder = () => {
     },
   ];
 
-  const filteredOrders = orders.filter((order) =>
-    order.productName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const handlePageChange = (newPage) => {
-    setPage(newPage);
-  };
-
-  const handleRowsPerPageChange = (newRowsPerPage) => {
-    setRowsPerPage(newRowsPerPage);
-  };
+  const filteredOrders = orders
+    ? orders.filter((order) =>
+        order.productName.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
 
   return (
     <div
@@ -158,7 +207,7 @@ const AllOrder = () => {
             startIcon={<AddIcon />}
             style={{ padding: 15, background: "#006400" }}
           >
-            Add order
+            Add Order
           </Button>
         </Link>
       </div>
@@ -173,9 +222,72 @@ const AllOrder = () => {
         rowsPerPageOptions={[5, 10, 25]}
         onPageSizeChange={handleRowsPerPageChange}
         rowCount={filteredOrders.length}
-        onPageChange={handlePageChange}
+        onPageChange={(params) => handlePageChange(params.page)}
         paginationMode="server"
       />
+      {editingOrderId && (
+        <div style={{ marginTop: 16 }}>
+          <TextField
+            label="Product Name"
+            variant="outlined"
+            value={editedOrder.productName || ""}
+            onChange={(e) => handleEditOrderData("productName", e.target.value)}
+            style={{ marginRight: 16 }}
+          />
+          <TextField
+            label="Quantity"
+            variant="outlined"
+            value={editedOrder.quantity || ""}
+            onChange={(e) => handleEditOrderData("quantity", e.target.value)}
+            style={{ marginRight: 16 }}
+          />
+          <TextField
+            label="Quality"
+            variant="outlined"
+            value={editedOrder.quality || ""}
+            onChange={(e) => handleEditOrderData("quality", e.target.value)}
+            style={{ marginRight: 16 }}
+          />
+          <TextField
+            label="Phone Number"
+            variant="outlined"
+            value={editedOrder.phoneNumber || ""}
+            onChange={(e) => handleEditOrderData("phoneNumber", e.target.value)}
+            style={{ marginRight: 16 }}
+          />
+          <TextField
+            label="Shipping Address"
+            variant="outlined"
+            value={editedOrder.shippingAddress || ""}
+            onChange={(e) =>
+              handleEditOrderData("shippingAddress", e.target.value)
+            }
+            style={{ marginRight: 16 }}
+          />
+          <TextField
+            label="Status"
+            variant="outlined"
+            value={editedOrder.status || ""}
+            onChange={(e) => handleEditOrderData("status", e.target.value)}
+            style={{ marginRight: 16 }}
+          />
+          <TextField
+            label="Price"
+            variant="outlined"
+            value={editedOrder.price || ""}
+            onChange={(e) => handleEditOrderData("price", e.target.value)}
+            style={{ marginRight: 16 }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSaveEdit}
+            style={{ padding: 10, marginTop: 10 }}
+          >
+            Save
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
