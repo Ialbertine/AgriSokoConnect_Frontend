@@ -256,6 +256,9 @@ const SignUp = () => {
               {errors.agreeTerms && (
                 <p className="text-xs text-red-500">{errors.agreeTerms}</p>
               )}
+              {generalError && (
+                <p className="text-red-500 text-center mb-4">{generalError}</p>
+              )}
             </div>
 
             <div className="mt-4 flex justify-center pb-3">
@@ -273,7 +276,7 @@ const SignUp = () => {
             <Link to="/login" className="text-green-900">
               Sign In
             </Link>
-          </span> 
+          </span>
         </div>
       </div>
     </div>
