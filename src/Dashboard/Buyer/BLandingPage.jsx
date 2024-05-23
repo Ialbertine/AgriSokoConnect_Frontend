@@ -1,30 +1,49 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const BLandingPage = () => {
   const [stockData, setStockData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [userRole, setUserRole] = useState("");
+  const [error, setError] = useState(null); 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/stock/retrieve"
-        );
-        const data = await response.json();
-        console.log("Fetched data:", data);
+        const token = localStorage.getItem("token");
+        console.log("Token:", token); 
 
-        // Ensure data is an array before setting it
-        if (Array.isArray(data)) {
-          setStockData(data);
-        } else {
-          console.error("Fetched data is not an array:", data);
+        if (!token) {
+          throw new Error("No token found");
         }
+
+        const response = await axios.get(
+          "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/stock/retrieve",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.data) {
+          throw new Error("No data received");
+        }
+        console.log(response.data);
+        setStockData(response.data);
       } catch (error) {
         console.error("Error fetching stock data:", error);
+        setError(error.message); 
       }
     };
 
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    // Fetch user role from local storage
+    const role = localStorage.getItem("userRole");
+    setUserRole(role);
   }, []);
 
   const handleSearchChange = (e) => {
@@ -41,6 +60,8 @@ const BLandingPage = () => {
 
   return (
     <div className="landing-page bg-gray-100">
+      {error && <div>Error: {error}</div>}{" "}
+      {/* Render error message if an error occurs */}
       <div className="relative">
         <img
           src="../AboutUs.png"
@@ -64,7 +85,6 @@ const BLandingPage = () => {
           Choose what you can order from these
         </h1>
       </div>
-
       {filteredStockData.length > 0 ? (
         <div className="stock-container px-4 py-8 bg-white rounded-md shadow-md mt-8">
           <h2 className="text-2xl font-semibold mb-4">Available Stock</h2>
