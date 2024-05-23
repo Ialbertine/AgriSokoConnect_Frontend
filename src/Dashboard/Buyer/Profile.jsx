@@ -9,6 +9,9 @@ const Profile = () => {
     PhoneNumber: "",
   });
 
+   const [loading, setLoading] = useState(false);
+   const [successMessage, setSuccessMessage] = useState("");
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -45,11 +48,14 @@ const Profile = () => {
 
  const handleSubmit = async (event) => {
    event.preventDefault();
+   setLoading(true);
+   setSuccessMessage("");
 
    try {
      const token = localStorage.getItem("token");
      if (!token) {
        console.error("Token missing from local storage");
+       setLoading(false)
        return;
      }
 
@@ -66,21 +72,43 @@ const Profile = () => {
      );
 
      if (response.ok) {
-       console.log("Profile updated successfully");
+       setSuccessMessage("Profile updated successfully");
+       setTimeout(() => {
+         setSuccessMessage("");
+       }, 20000);
      } else {
        const errorMessage = await response.text(); // Get error message from response body
        console.error("Failed to update profile:", errorMessage);
      }
    } catch (error) {
      console.error("Error updating profile:", error);
+   } finally {
+    setLoading(false)
    }
  };
-
+    useEffect(() => {
+      let timeout;
+      if (successMessage) {
+        timeout = setTimeout(() => {
+          setSuccessMessage("");
+        }, 20000);
+      }
+      return () => {
+        if (timeout) clearTimeout(timeout);
+      };
+    }, [successMessage]);
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-4">Profile</h1>
       <div className="justify-center">
+
+        {successMessage && (
+          <div className="bg-green-100 text-green-700 px-4 py-3 rounded mb-4">
+            {successMessage}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="mb-4">
             <label
@@ -179,8 +207,9 @@ const Profile = () => {
           <button
             type="submit"
             className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+            disabled={loading}
           >
-            Update Profile
+            {loading ? "Updating..." : "Update Profile"}
           </button>
         </form>
       </div>
