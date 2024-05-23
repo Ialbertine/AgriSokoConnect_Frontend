@@ -55,7 +55,7 @@ function BuyerSideBar() {
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-5">
             <Link
-              to="/buyerprofile"
+              to="/dashboard/buyer/profile"
               className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
             >
               <CgProfile />
