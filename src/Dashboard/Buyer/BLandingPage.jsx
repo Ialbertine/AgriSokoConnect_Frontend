@@ -2,61 +2,45 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const BLandingPage = () => {
-  const [stockData, setStockData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [userRole, setUserRole] = useState("");
-  const [error, setError] = useState(null); 
+  const [error, setError] = useState(null);
+  const [fetch, setFetch] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        console.log("Token:", token); 
+  
 
-        if (!token) {
-          throw new Error("No token found");
-        }
+  // const handleSearchChange = (e) => {
+  //   setSearchQuery(e.target.value);
+  // };
 
-        const response = await axios.get(
-          "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/stock/retrieve",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+  // const filteredStockData = Array.isArray(stockData)
+  //   ? stockData.filter((stockItem) =>
+  //       stockItem.NameOfProduct.toLowerCase().includes(
+  //         searchQuery.toLowerCase()
+  //       )
+  //     )
+  //   : [];
 
-        if (!response.data) {
-          throw new Error("No data received");
-        }
+  const handleFetch = async () => {
+    let token = localStorage.getItem("token");
+    await axios({
+      method: "GET",
+      url: "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/stock/retrieve",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
         console.log(response.data);
-        setStockData(response.data);
-      } catch (error) {
-        console.error("Error fetching stock data:", error);
-        setError(error.message); 
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    // Fetch user role from local storage
-    const role = localStorage.getItem("userRole");
-    setUserRole(role);
-  }, []);
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+        setFetch(response.data.stocks);
+      })
+      .then((error) => {
+        console.log(error);
+      });
   };
 
-  const filteredStockData = Array.isArray(stockData)
-    ? stockData.filter((stockItem) =>
-        stockItem.NameOfProduct.toLowerCase().includes(
-          searchQuery.toLowerCase()
-        )
-      )
-    : [];
+  useEffect(() => {
+    handleFetch();
+  }, []);
 
   return (
     <div className="landing-page bg-gray-100">
@@ -76,19 +60,19 @@ const BLandingPage = () => {
         <input
           type="text"
           placeholder="Search for a product"
-          value={searchQuery}
-          onChange={handleSearchChange}
+          // value={searchQuery}
+          // onChange={handleSearchChange}
           className="px-4 py-2 border rounded-md"
         />
         <h1 className="text-xl font-bold my-3">
           Choose what you can order from these
         </h1>
       </div>
-      {filteredStockData.length > 0 ? (
+      {fetch.length > 0 ? (
         <div className="stock-container px-4 py-8 bg-white rounded-md shadow-md mt-8">
           <h2 className="text-2xl font-semibold mb-4">Available Stock</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredStockData.map((stockItem, index) => (
+            {fetch.map((stockItem, index) => (
               <div
                 key={index}
                 className="bg-white rounded-lg shadow-lg p-4 flex flex-col items-center"
@@ -99,18 +83,21 @@ const BLandingPage = () => {
                   className="w-32 h-32 object-cover mb-4"
                 />
                 <span className="text-xl font-medium">
-                  {stockItem.NameOfProduct}
+                  Product Name:{stockItem.NameOfProduct}
                 </span>
-                <span className="text-gray-600">{stockItem.description}</span>
-                <span className="text-xl font-medium">
-                  {stockItem.PricePerTon}
+                <span className="text-gray-600">
+                  Des: {stockItem.description}
                 </span>
+                <div className="flex gap-2 text-xl font-medium">
+                  <span>Price PerTon: {stockItem.pricePerTon}</span>
+                  <span>RWF</span>
+                </div>
+                <div className="flex gap-2 text-xl font-medium">
+                  <span>Quantity: {stockItem.quantity}</span>
+                  <span>Ton</span>
+                </div>
                 <span className="text-xl font-medium">
-                  {stockItem.quantity}
-                </span>
-                <span className="text-gray-600">{stockItem.totalPrice}</span>
-                <span className="text-xl font-medium">
-                  {stockItem.typeOfProduct}
+                  Type of Product: {stockItem.typeOfProduct}
                 </span>
               </div>
             ))}
