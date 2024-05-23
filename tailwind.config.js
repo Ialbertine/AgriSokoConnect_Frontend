@@ -13,6 +13,7 @@ export default {
     extend: {
       animation: {
         'spin': 'spin 2s linear infinite',
+        'pulse': 'pulse 2s infinite'
       }
     },
   },
