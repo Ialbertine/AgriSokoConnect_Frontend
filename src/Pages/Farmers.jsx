@@ -53,15 +53,15 @@ const Farmers = () => {
             <p className='text-5xl'><b>Our Farmers</b></p>
           </div>
         </div>
-        <div className='px-44 py-10'>
-          <strong className='text-xl flex items-center justify-center pb-7'>Our Farmers List:</strong>
+        <div className='lg:px-44 md:px-20 sm:px-10 py-10'>
+          <strong className='text-xl flex lg:items-center md:items-center sm:items-start lg:justify-center md:justify-center sm:justify-start pb-7'>Our Farmers List:</strong>
           <div>
             {farmers.length === 0 ? (
               <p>No farmers available</p>
             ) : (
-              <ul className=' flex gap-10'>
+              <ul className='flex lg:flex-row md:flex-row sm:flex-col flex-wrap gap-10'>
                 {farmers.map((farmer, index) => (
-                  <li key={index} className=' w-[60vh] border shadow-md shadow-slate-400 py-3 px-5 flex flex-col gap-3'>
+                  <li key={index} className=' lg:w-[60vh] md:w-[40vh] sm:w-[39vh] border shadow-md shadow-slate-400 py-3 px-5 flex flex-col gap-3'>
                     <h2 className='text-2xl font-bold'>{farmer.farmer.toUpperCase()}</h2>
                     <p className='text-lg font-thin'>My farming efforts focus on growing:</p>
                     <ul className='flex flex-col'>
