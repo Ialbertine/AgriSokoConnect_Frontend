@@ -37,11 +37,32 @@ const Farmers = () => {
   }, []);
 
   if (loading) {
-    return <div className='text-xl h-[30vh] text-black font-semibold'><VscLoading className='animate-spin' />Loading</div>;
+    return (
+      <div>
+        <div className='relative'>
+          <img src='farmerlogin.webp' className='h-[50vh] w-full object-cover'></img>
+          <div className='absolute lg:top-48 md:top-44 sm:top-44 lg:left-[92vh] md:left-[42vh] sm:left-[8vh] text-white'>
+            <p className='text-5xl'><b>Our Farmers</b></p>
+          </div>
+        </div>
+        <div className='pt-20 flex justify-center gap-5 text-xl h-[80vh] text-black font-semibold'>
+          <VscLoading className='animate-spin' />
+          <p>Loading</p>
+        </div>
+      </div>
+    )
   }
 
   if (error) {
-    return <div className='text-xl font-semibold'>Error: {error}</div>;
+    return (
+      <div className='relative'>
+        <img src='farmerlogin.webp' className='h-[50vh] w-full object-cover'></img>
+        <div className='absolute lg:top-48 md:top-44 sm:top-44 lg:left-[92vh] md:left-[42vh] sm:left-[8vh] text-white'>
+          <p className='text-5xl'><b>Our Farmers</b></p>
+        </div>
+        <div className=' pt-10 px-10 text-xl font-semibold'>Some error occured!</div>
+      </div>
+    )
   }
 
   return (
@@ -59,23 +80,21 @@ const Farmers = () => {
             {farmers.length === 0 ? (
               <p>No farmers available</p>
             ) : (
-              <ul className='flex lg:flex-row md:flex-row sm:flex-col flex-wrap gap-10'>
+              <ul className='flex lg:flex-row flex-wrap md:flex-row sm:flex-col gap-10'>
                 {farmers.map((farmer, index) => (
-                  <li key={index} className=' lg:w-[60vh] md:w-[40vh] sm:w-[39vh] border shadow-md shadow-slate-400 py-3 px-5 flex flex-col gap-3'>
+                  <li key={index} className=' lg:w-[50vh] md:w-[40vh] sm:w-[39vh] border shadow-md shadow-slate-400 py-3 px-5 flex flex-col gap-3'>
                     <h2 className='text-2xl font-bold'>{farmer.farmer.toUpperCase()}</h2>
                     <p className='text-lg font-thin'>My farming efforts focus on growing:</p>
                     <ul className='flex flex-col'>
                       {farmer.stock.map((product) => (
                         <div>
-                          {/* <ReadMore text={product} maxLength={70} /> */}
                           <li key={product._id} className='list'>
-                            <Accordion title={product.NameOfProduct.toUpperCase()} answer={'Specification: ' + product.typeOfProduct + ' Quantity: ' + product.quantity + ' ton Price per ton: ' + product.pricePerTon + 'RWF' }/>
-                            {/* <h3 className='text-lg text-[#6d8c54] font-semibold'>{product.NameOfProduct}</h3>
-                            <img className='w-[40vh] pb-5' src={product.image} alt={product.NameOfProduct}></img>
-                            <p><span className='font-bold'>Specification: </span>{product.typeOfProduct}</p>
-                            <p><span className='font-bold'>Description: </span>{product.description}</p>
-                            <p><span className='font-bold'>Quantity: </span>{product.quantity} tones</p>
-                            <p><span className='font-bold'>Price per Tone: </span>{product.pricePerTon} RWF</p> */}
+                            <img src={product.image} className='h-[25vh] w-full object-cover pb-3'></img>
+                            <Accordion title={product.NameOfProduct.toUpperCase()}
+                              answer={' Specification: ' + product.typeOfProduct}
+                              answer1={' Quantity: ' + product.quantity + ' ton'}
+                              answer2={' Price per ton: ' + product.pricePerTon + ' RWF'}
+                            />
                           </li>
                         </div>
                       ))}
