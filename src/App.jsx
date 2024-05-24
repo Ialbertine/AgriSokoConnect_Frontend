@@ -90,7 +90,10 @@ const App = () => {
             <Route path="" element={<BuyerLayout />}>
               <Route path="" element={<BLandingPage />} />
               <Route path="allorders" element={<AllOrders />} />
-              <Route path="create" element={<Create />} />
+              <Route
+                path="create/:productId/:NameOfProduct"
+                element={<Create />}
+              />
               <Route path="profile" element={<BuyerProfile />} />
               <Route path="view" element={<ViewOrder />} />
               <Route path="support" element={<Support />} />

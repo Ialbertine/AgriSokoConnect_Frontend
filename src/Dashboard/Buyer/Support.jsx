@@ -4,7 +4,7 @@ import axios from "axios";
 const Support = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [issue, setIssue] = useState("");
+  const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -18,11 +18,11 @@ const Support = () => {
 
     try {
       const response = await axios.post(
-        "https://agrisokoconnect-backend-ipza.onrender.com/support",
+        "https://agrisokoconnect-backend-ipza.onrender.com/add",
         {
           name,
           email,
-          issue,
+          subject,
           message,
         }
       );
@@ -91,8 +91,8 @@ const Support = () => {
             <input
               type="text"
               id="issue"
-              value={issue}
-              onChange={(e) => setIssue(e.target.value)}
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-md"
             />
