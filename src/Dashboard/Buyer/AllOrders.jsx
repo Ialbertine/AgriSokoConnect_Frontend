@@ -7,8 +7,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
-
-
 const AllOrder = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
@@ -18,50 +16,47 @@ const AllOrder = () => {
   const [editedOrder, setEditedOrder] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [orderData, setOrderData] = useState([]);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      setIsLoading(true);
-      try {
-        const token = localStorage.getItem("token");
-        console.log("Token:", token);
-
-        if (!token) {
-          throw new Error("No token found");
-        }
-
-        const response = await fetch(
-          "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/retrieve",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch orders: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        console.log("Fetched Orders:", data); 
-
-        
-        if (data.orders && Array.isArray(data.orders)) {
-          setOrders(data.orders);
-        } else {
-          throw new Error("Invalid data format received");
-        }
-      } catch (error) {
-        console.error("Error fetching orders:", error);
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchOrders();
-  }, []);
+  }, []); // Fetch orders on component mount
+
+  const fetchOrders = async () => {
+    setIsLoading(true);
+    const token = localStorage.getItem("token");
+    console.log("Token:", token);
+
+    if (!token) {
+      setError("No token found");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/retrieve",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch orders");
+      }
+
+      const data = await response.json();
+      console.log(data);
+      setOrderData(data.data);
+    } catch (error) {
+      console.log(error);
+      setError("Failed to fetch orders");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleDelete = async (id) => {
     try {
@@ -90,7 +85,7 @@ const AllOrder = () => {
   const handleSaveEdit = async () => {
     try {
       const response = await fetch(
-        `https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/update ${id}`,
+        `https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/update/${editingOrderId}`,
         {
           method: "PUT",
           headers: {
@@ -111,7 +106,7 @@ const AllOrder = () => {
       setEditingOrderId(null);
       setEditedOrder({});
     } catch (error) {
-      console.error("Error updating order:", error); 
+      console.error("Error updating order:", error);
       setError(error.message);
     }
   };
@@ -166,11 +161,12 @@ const AllOrder = () => {
     },
   ];
 
-  const filteredOrders = orders
-    ? orders.filter((order) =>
-        order.productName.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : [];
+  const filteredOrders = orderData.filter(
+    (order) =>
+      order.productName &&
+      searchQuery &&
+      order.productName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div

@@ -1,41 +1,40 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const BLandingPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState(null);
   const [fetch, setFetch] = useState([]);
 
-  
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
-  // const handleSearchChange = (e) => {
-  //   setSearchQuery(e.target.value);
-  // };
-
-  // const filteredStockData = Array.isArray(stockData)
-  //   ? stockData.filter((stockItem) =>
-  //       stockItem.NameOfProduct.toLowerCase().includes(
-  //         searchQuery.toLowerCase()
-  //       )
-  //     )
-  //   : [];
+  const filteredStockData = Array.isArray(fetch)
+    ? fetch.filter((stockItem) =>
+        stockItem.NameOfProduct.toLowerCase().includes(
+          searchQuery.toLowerCase()
+        )
+      )
+    : [];
 
   const handleFetch = async () => {
     let token = localStorage.getItem("token");
-    await axios({
-      method: "GET",
-      url: "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/stock/retrieve",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        console.log(response.data);
-        setFetch(response.data.stocks);
-      })
-      .then((error) => {
-        console.log(error);
+    try {
+      const response = await axios({
+        method: "GET",
+        url: "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/stock/retrieve",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+      console.log(response.data);
+      setFetch(response.data.stocks);
+    } catch (error) {
+      console.log(error);
+      setError("Failed to fetch stock data");
+    }
   };
 
   useEffect(() => {
@@ -54,28 +53,31 @@ const BLandingPage = () => {
           <p className="text-4xl font-bold">Buyer Dashboard</p>
         </div>
       </div>
-      {error && <div>Error: {error}</div>}{" "}
+      {error && <div>Error: {error}</div>}
       <div>{/* description content of the page here */}</div>
       <div className="m-4">
         <input
           type="text"
           placeholder="Search for a product"
-          // value={searchQuery}
-          // onChange={handleSearchChange}
+          value={searchQuery}
+          onChange={handleSearchChange}
           className="px-4 py-2 border rounded-md"
         />
         <h1 className="text-xl font-bold my-3">
           Choose what you can order from these
         </h1>
       </div>
-      {fetch.length > 0 ? (
+      {filteredStockData.length > 0 ? (
         <div className="stock-container px-4 py-8 bg-white rounded-md shadow-md mt-8">
           <h2 className="text-2xl font-semibold mb-4">Available Stock</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {fetch.map((stockItem, index) => (
-              <div
+            {filteredStockData.map((stockItem, index) => (
+              <Link
                 key={index}
-                className="bg-white rounded-lg shadow-lg p-4 flex flex-col items-center"
+                to={`/dashboard/buyer/create/${
+                  stockItem._id
+                }/${encodeURIComponent(stockItem.NameOfProduct.trim())}`}
+                className="bg-white rounded-lg shadow-lg p-4 flex flex-col items-center no-underline"
               >
                 <img
                   src={stockItem.image}
@@ -83,7 +85,7 @@ const BLandingPage = () => {
                   className="w-32 h-32 object-cover mb-4"
                 />
                 <span className="text-xl font-medium">
-                  Product Name:{stockItem.NameOfProduct}
+                  Product Name: {stockItem.NameOfProduct}
                 </span>
                 <span className="text-gray-600">
                   Des: {stockItem.description}
@@ -99,7 +101,7 @@ const BLandingPage = () => {
                 <span className="text-xl font-medium">
                   Type of Product: {stockItem.typeOfProduct}
                 </span>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
