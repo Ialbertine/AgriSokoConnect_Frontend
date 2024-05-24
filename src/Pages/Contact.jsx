@@ -52,6 +52,7 @@ const Contact = () => {
     }
   };
 
+//   this will be used to reset form after message was sent
   const resetForm = () => {
     setName("");
     setEmail("");
