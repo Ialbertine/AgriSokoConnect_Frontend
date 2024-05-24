@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { VscLoading } from "react-icons/vsc";
+import Accordion from './Accordion';
 
 const Farmers = () => {
 
@@ -36,7 +37,7 @@ const Farmers = () => {
   }, []);
 
   if (loading) {
-    return <div className='text-xl h-[30vh] font-semibold'><VscLoading className='animate-spin'/>Loading</div>;
+    return <div className='text-xl h-[30vh] text-black font-semibold'><VscLoading className='animate-spin' />Loading</div>;
   }
 
   if (error) {
@@ -52,26 +53,31 @@ const Farmers = () => {
             <p className='text-5xl'><b>Our Farmers</b></p>
           </div>
         </div>
-        <div className='px-44 py-10'>
-          <strong className='text-xl flex items-center justify-center'>Our Farmers List:</strong>
+        <div className='lg:px-44 md:px-20 sm:px-10 py-10'>
+          <strong className='text-xl flex lg:items-center md:items-center sm:items-start lg:justify-center md:justify-center sm:justify-start pb-7'>Our Farmers List:</strong>
           <div>
             {farmers.length === 0 ? (
               <p>No farmers available</p>
             ) : (
-              <ul className='py-3 px-5'>
+              <ul className='flex lg:flex-row md:flex-row sm:flex-col flex-wrap gap-10'>
                 {farmers.map((farmer, index) => (
-                  <li key={index}>
+                  <li key={index} className=' lg:w-[60vh] md:w-[40vh] sm:w-[39vh] border shadow-md shadow-slate-400 py-3 px-5 flex flex-col gap-3'>
                     <h2 className='text-2xl font-bold'>{farmer.farmer.toUpperCase()}</h2>
-                    <ul className='flex flex-col gap-5'>
+                    <p className='text-lg font-thin'>My farming efforts focus on growing:</p>
+                    <ul className='flex flex-col'>
                       {farmer.stock.map((product) => (
-                        <li key={product._id}>
-                          <h3 className='text-lg text-[#6d8c54] font-semibold'>{product.NameOfProduct}</h3>
-                          <img className='w-[40vh]' src={product.image} alt={product.NameOfProduct}></img>
-                          <p><span className='font-bold'>Specification:</span>{product.typeOfProduct}</p>
-                          <p><span className='font-bold'>description:</span>{product.description}</p>
-                          <p><span className='font-bold'>Quantity: </span>{product.quantity} tones</p>
-                          <p><span className='font-bold'>Price per Tone: </span>{product.pricePerTon} RWF</p>
-                        </li>
+                        <div>
+                          {/* <ReadMore text={product} maxLength={70} /> */}
+                          <li key={product._id} className='list'>
+                            <Accordion title={product.NameOfProduct.toUpperCase()} answer={'Specification: ' + product.typeOfProduct + ' Quantity: ' + product.quantity + ' ton Price per ton: ' + product.pricePerTon + 'RWF' }/>
+                            {/* <h3 className='text-lg text-[#6d8c54] font-semibold'>{product.NameOfProduct}</h3>
+                            <img className='w-[40vh] pb-5' src={product.image} alt={product.NameOfProduct}></img>
+                            <p><span className='font-bold'>Specification: </span>{product.typeOfProduct}</p>
+                            <p><span className='font-bold'>Description: </span>{product.description}</p>
+                            <p><span className='font-bold'>Quantity: </span>{product.quantity} tones</p>
+                            <p><span className='font-bold'>Price per Tone: </span>{product.pricePerTon} RWF</p> */}
+                          </li>
+                        </div>
                       ))}
                     </ul>
                   </li>
