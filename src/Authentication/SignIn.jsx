@@ -174,7 +174,9 @@ const SignIn = () => {
           )}
           <button
             type="submit"
-            className="w-full bg-green-900 text-white py-2 rounded-md hover:bg-[#378000] transition duration-300 mb-3"
+            className={`w-full bg-green-900 text-white py-2 rounded-md hover:bg-[#378000] transition duration-300 mb-3 ${
+              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
             {isSubmitting ? "Loading..." : "Login"}
           </button>

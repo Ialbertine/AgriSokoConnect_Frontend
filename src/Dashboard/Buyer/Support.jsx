@@ -36,7 +36,7 @@ const Support = () => {
          setTimeout(() => {
            setSuccessMessage("");
            resetForm();
-         }, 20000);
+         }, 5000);
        } else {
          console.error("Response status:", response.status);
          console.error("Response data:", response.data);

@@ -93,7 +93,7 @@ const Profile = () => {
     if (successMessage) {
       timeout = setTimeout(() => {
         setSuccessMessage("");
-      }, 20000);
+      }, 5000);
     }
     return () => {
       if (timeout) clearTimeout(timeout);

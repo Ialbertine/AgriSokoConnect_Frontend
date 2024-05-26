@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -9,11 +9,26 @@ const Reset = () => {
   const [isSuccess, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    let timer;
+    if (isSuccess || error) {
+      timer = setTimeout(() => {
+        setError("");
+        setLoading(false);
+        setSuccess(false);
+        setPassword("");
+        setConfirmPassword("");
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  }, [isSuccess, error]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const passwordRegex = /^.{4,10}$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
@@ -22,7 +37,9 @@ const Reset = () => {
     }
 
     if (!password.match(passwordRegex)) {
-      setError("Password must be at least 4 to 8 characters long");
+      setError(
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character"
+      );
       setLoading(false);
       return;
     }
@@ -39,7 +56,6 @@ const Reset = () => {
         if (response.status === 200) {
           setLoading(false);
           setSuccess(true);
-
           setPassword("");
           setConfirmPassword("");
         } else {
@@ -50,6 +66,7 @@ const Reset = () => {
       .catch((error) => {
         console.error("An error occurred:", error);
         setLoading(false);
+        setError("An error occurred while resetting the password.");
       });
   };
 
@@ -58,7 +75,7 @@ const Reset = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-[#000000c6]">
+    <div className="min-h-screen flex justify-center items-center bg-[#e4e3e3]">
       <div className="w-full max-w-md p-6 bg-white rounded-xl shadow-md">
         <h2 className="text-2xl font-semibold text-center mb-6">
           Reset Password
@@ -129,7 +146,9 @@ const SuccessPopup = ({ onClose }) => (
           Return to Sign In
         </Link>
       </div>
-      <button onClick={onClose} className="absolute top-0 right-0 p-2"></button>
+      <button onClick={onClose} className="absolute top-0 right-0 p-2">
+        Close
+      </button>
     </div>
   </div>
 );

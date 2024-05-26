@@ -13,6 +13,7 @@ const SignUp = () => {
   const [role, setRole] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const [generalError, setGeneralError] = useState("");
   const [errors, setErrors] = useState({
@@ -97,15 +98,31 @@ const SignUp = () => {
 
       if (response.status === 200 || response.status === 201) {
         console.log("Signup successful:", response.data);
-        navigate("/otp");
+        
+        setSuccess("You have successfully registered your account.");
+        setTimeout(() => {
+          navigate("/otp");
+        }, 3000);
       }
     } catch (error) {
       if (error.response && error.response.status === 409) {
-        setGeneralError("Email is already in use. Please sign in.");
+        setGeneralError("an Error occurred during sign up");
       } else {
         console.error("Error during signup:", error);
-        setGeneralError("An error occurred during signup. Please try again.");
+        setGeneralError("Email is already in use. Please sign in.");
       }
+      // this is used to reset the form when an error occurs
+      setTimeout(() => {
+        setGeneralError("");
+        setFullName("");
+        setEmail("");
+        setPhoneNumber("");
+        setPassword("");
+        setConfirmPassword("");
+        setRole("");
+        setAgreeTerms(false);
+        setErrors({});
+      }, 5000);
     } finally {
       setLoading(false);
     }
@@ -134,6 +151,7 @@ const SignUp = () => {
           <h1 className="text-center text-3xl font-bold mb-4 text-green-900">
             Register Here
           </h1>
+          {success && <p className="text-green-500">{success}</p>}
 
           <form onSubmit={handleSubmit} className="flex flex-col">
             <label htmlFor="fullName">Full Name</label>
@@ -253,18 +271,20 @@ const SignUp = () => {
               <label htmlFor="agreeTerms" className="text-sm">
                 I agree to the Terms and Conditions
               </label>
-              {errors.agreeTerms && (
-                <p className="text-xs text-red-500">{errors.agreeTerms}</p>
-              )}
-              {generalError && (
-                <p className="text-red-500 text-center mb-4">{generalError}</p>
-              )}
             </div>
+            {errors.agreeTerms && (
+              <p className="text-xs text-red-500">{errors.agreeTerms}</p>
+            )}
+            {generalError && (
+              <p className="text-red-500 text-center mb-1">{generalError}</p>
+            )}
 
-            <div className="mt-4 flex justify-center pb-3">
+            <div className="mt-3 flex justify-center pb-3">
               <button
                 type="submit"
-                className="bg-green-900 hover:bg-[#378000] text-white font-bold py-2 px-4 rounded-md w-[50%]"
+                className={`bg-green-900 hover:bg-[#378000] text-white font-bold py-2 px-4 rounded-md w-[50%] ${
+                  isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 disabled={isLoading}
               >
                 {isLoading ? "Loading..." : "Sign Up"}{" "}
