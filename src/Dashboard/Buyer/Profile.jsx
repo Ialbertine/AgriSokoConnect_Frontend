@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import profile from "../../assets/profile.png";
 
 const Profile = () => {
   const [userData, setUserData] = useState({
@@ -9,8 +10,8 @@ const Profile = () => {
     PhoneNumber: "",
   });
 
-   const [loading, setLoading] = useState(false);
-   const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -46,63 +47,77 @@ const Profile = () => {
     fetchUser();
   }, []);
 
- const handleSubmit = async (event) => {
-   event.preventDefault();
-   setLoading(true);
-   setSuccessMessage("");
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setSuccessMessage("");
 
-   try {
-     const token = localStorage.getItem("token");
-     if (!token) {
-       console.error("Token missing from local storage");
-       setLoading(false)
-       return;
-     }
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("Token missing from local storage");
+        setLoading(false);
+        return;
+      }
 
-     const response = await fetch(
-       `https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/profile/update`,
-       {
-         method: "PUT",
-         headers: {
-           Authorization: `Bearer ${token}`,
-           "Content-Type": "application/json",
-         },
-         body: JSON.stringify(userData),
-       }
-     );
+      const response = await fetch(
+        `https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/profile/update`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        }
+      );
 
-     if (response.ok) {
-       setSuccessMessage("Profile updated successfully");
-       setTimeout(() => {
-         setSuccessMessage("");
-       }, 20000);
-     } else {
-       const errorMessage = await response.text(); // Get error message from response body
-       console.error("Failed to update profile:", errorMessage);
-     }
-   } catch (error) {
-     console.error("Error updating profile:", error);
-   } finally {
-    setLoading(false)
-   }
- };
-    useEffect(() => {
-      let timeout;
-      if (successMessage) {
-        timeout = setTimeout(() => {
+      if (response.ok) {
+        setSuccessMessage("Profile updated successfully");
+        setTimeout(() => {
           setSuccessMessage("");
         }, 20000);
+      } else {
+        const errorMessage = await response.text(); // Get error message from response body
+        console.error("Failed to update profile:", errorMessage);
       }
-      return () => {
-        if (timeout) clearTimeout(timeout);
-      };
-    }, [successMessage]);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let timeout;
+    if (successMessage) {
+      timeout = setTimeout(() => {
+        setSuccessMessage("");
+      }, 20000);
+    }
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [successMessage]);
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-4">Profile</h1>
-      <div className="justify-center">
+      <h1 className="text-4xl font-bold mb-4 text-green-600">Profile</h1>
 
+      <div className="flex items-center mb-8">
+        <img
+          src={profile}
+          alt="User Avatar"
+          className="w-16 h-16 rounded-full mr-4"
+        />
+        <div>
+          <h2 className="text-2xl font-semibold">{userData.fullName}</h2>
+          <p className="text-gray-600">{userData.email}</p>
+          <p className="text-gray-600">{userData.PhoneNumber}</p>
+        </div>
+      </div>
+
+      <div className="justify-center">
         {successMessage && (
           <div className="bg-green-100 text-green-700 px-4 py-3 rounded mb-4">
             {successMessage}
@@ -206,7 +221,7 @@ const Profile = () => {
 
           <button
             type="submit"
-            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+            className="bg-green-900 text-white py-2 px-4 rounded hover:bg-green-700"
             disabled={loading}
           >
             {loading ? "Updating..." : "Update Profile"}

@@ -12,90 +12,60 @@ const Create = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const handlePayment = async () => {
-    try {
-      // Retrieve token from local storage
-      const token = localStorage.getItem("token");
-      console.log("Token:", token);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-      // Check if token exists
-      if (!token) {
-        throw new Error("No token found");
+    // Validation for the order
+    let isValid = true;
+    setErrorMessage("");
+
+    if (quantity < 1 || !Number.isInteger(quantity)) {
+      isValid = false;
+      setErrorMessage("Please enter a valid quantity (positive integer).");
+    }
+
+    if (quality.trim() === "") {
+      isValid = false;
+      setErrorMessage("Please enter the product quality.");
+    }
+
+    if (phoneNumber.trim() === "") {
+      isValid = false;
+      setErrorMessage("Please enter your phone number.");
+    }
+
+    if (shippingAddress.trim() === "") {
+      isValid = false;
+      setErrorMessage("Please enter your shipping address.");
+    }
+
+    if (!unit) {
+      isValid = false;
+      setErrorMessage("Please select a unit.");
+    }
+
+    //  this next line says if validation is successful, create the order
+    if (isValid) {
+      try {
+        const response = await axios.post(
+          "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/create",
+          {
+            quantity,
+            quality,
+            phoneNumber,
+            shippingAddress,
+          }
+        );
+
+       
+        setSuccessMessage("Order created successfully!");
+        navigate("/payment"); 
+      } catch (error) {
+        console.error("Error creating order:", error);
+        setErrorMessage("Failed to create order. Please try again.");
       }
-
-      // Make a GET request to retrieve stock with authorization header
-      // const stockResponse = await axios.get(
-      //   "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/stock/retrieve",
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   }
-      // );
-
-      // Make a GET request to the payment endpoint with authorization header
-      const paymentResponse = await axios.get(
-        "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/pay/momo",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      // If requests succeed, proceed with payment
-      console.log("Payment response:", paymentResponse);
-
-      // Open payment URL in a new tab/window
-      window.open(
-        "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/pay/momo",
-        "_blank",
-        "noopener noreferrer"
-      );
-    } catch (error) {
-      console.error("Error:", error.message);
-      throw new Error("Payment failed"); // Throw an error to be caught by the handleSubmit function
     }
   };
-const handleSubmit = async (event) => {
-  event.preventDefault();
-
-  // Validation for the order
-  let isValid = true;
-  setErrorMessage("");
-
-  if (quantity < 1 || !Number.isInteger(quantity)) {
-    isValid = false;
-    setErrorMessage("Please enter a valid quantity (positive integer).");
-  }
-
-  if (quality.trim() === "") {
-    isValid = false;
-    setErrorMessage("Please enter the product quality.");
-  }
-
-  if (phoneNumber.trim() === "") {
-    isValid = false;
-    setErrorMessage("Please enter your phone number.");
-  }
-
-  if (shippingAddress.trim() === "") {
-    isValid = false;
-    setErrorMessage("Please enter your shipping address.");
-  }
-
-  // If order is valid, proceed to payment
-  if (isValid) {
-    try {
-      await handlePayment(); // Call handlePayment function
-      // If payment is successful, navigate to success page or display success message
-    } catch (error) {
-      console.error("Error:", error.message);
-      setErrorMessage("Payment failed. Please try again."); // Display error message to user
-    }
-  }
-};
-
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen w-full">
@@ -103,6 +73,10 @@ const handleSubmit = async (event) => {
 
       {errorMessage && (
         <div className="text-red-500 font-bold mb-4">{errorMessage}</div>
+      )}
+
+      {successMessage && (
+        <div className="text-green-500 font-bold mb-4">{successMessage}</div>
       )}
 
       <form onSubmit={handleSubmit} className="w-[80%] lg:w-[50%]">
@@ -130,6 +104,7 @@ const handleSubmit = async (event) => {
               value={unit}
               onChange={(e) => setUnit(e.target.value)}
               className="shadow appearance-none border rounded w-[50%] py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-1 focus:ring-black ml-3"
+              required
             >
               <option value="" disabled>
                 Select Unit
@@ -194,8 +169,7 @@ const handleSubmit = async (event) => {
         </div>
         <div className="flex gap-5">
           <button
-            type="button" // Change the type to "button" to prevent form submission
-            onClick={handleSubmit} // Call the handleSubmit function when clicked
+            type="submit"
             className="bg-green-900 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:ring-1 focus:ring-offset-2"
           >
             Proceed for Payment

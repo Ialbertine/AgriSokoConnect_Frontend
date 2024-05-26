@@ -24,7 +24,7 @@ const BLandingPage = () => {
     try {
       const response = await axios({
         method: "GET",
-        url: "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/stock/retrieve",
+        url: "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/stock/Retrieve",
         headers: {
           Authorization: `Bearer ${token}`,
         },

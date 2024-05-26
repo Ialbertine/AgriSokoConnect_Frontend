@@ -2,52 +2,62 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const Support = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+   const [name, setName] = useState("");
+   const [email, setEmail] = useState("");
+   const [phoneNumber, setPhoneNumber] = useState("");
+   const [subject, setSubject] = useState("");
+   const [message, setMessage] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSuccessMessage("");
-    setErrorMessage("");
+   const [successMessage, setSuccessMessage] = useState("");
+   const [error, setError] = useState("");
+   const [isSubmitting, setIsSubmitting] = useState(false);
 
-    try {
-      const response = await axios.post(
-        "https://agrisokoconnect-backend-ipza.onrender.com/add",
-        {
-          name,
-          email,
-          subject,
-          message,
-        }
-      );
+   const handleSubmit = async (e) => {
+     e.preventDefault();
+     setIsSubmitting(true);
 
-      if (response.data.success) {
-        setSuccessMessage(
-          "Your support request has been submitted successfully."
-        );
-        setName("");
-        setEmail("");
-        setIssue("");
-        setMessage("");
-      } else {
-        setErrorMessage(
-          "Failed to submit your request. Please try again later."
-        );
-      }
-    } catch (error) {
-      setErrorMessage(
-        "An error occurred while submitting your request. Please try again later."
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+     const formData = {
+       name: name,
+       email: email,
+       phoneNumber: phoneNumber,
+       subject: subject,
+       message: message,
+     };
+
+     try {
+       const response = await axios.post(
+         "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/contact/add",
+         formData
+       );
+
+       if (response.status === 200 || response.status === 201) {
+         setSuccessMessage("Message sent successfully");
+         setError("");
+         setTimeout(() => {
+           setSuccessMessage("");
+           resetForm();
+         }, 20000);
+       } else {
+         console.error("Response status:", response.status);
+         console.error("Response data:", response.data);
+         setError("Failed to submit the form. Please try again.");
+       }
+     } catch (err) {
+       console.error(err);
+       setError(err.message);
+     } finally {
+       setIsSubmitting(false);
+     }
+   };
+
+   //   this will be used to reset form after message was sent
+   const resetForm = () => {
+     setName("");
+     setEmail("");
+     setPhoneNumber("");
+     setSubject("");
+     setMessage("");
+   };
 
   return (
     <div className="bg-white min-h-screen flex items-center justify-center">
@@ -56,7 +66,7 @@ const Support = () => {
         {successMessage && (
           <p className="text-green-500 mb-4">{successMessage}</p>
         )}
-        {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
+        {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="name" className="block mb-2">
@@ -80,6 +90,19 @@ const Support = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            />
+          </div>
+          <div>
+            <label htmlFor="phoneNumber" className="block mb-2">
+              Phone Number
+            </label>
+            <input
+              type="text"
+              id="phoneNumber"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-md"
             />
