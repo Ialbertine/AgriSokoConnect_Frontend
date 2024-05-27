@@ -7,6 +7,7 @@ const Otp = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState(""); // New state for success message
   const navigate = useNavigate();
 
   const handleChange = (index, value) => {
@@ -58,8 +59,15 @@ const Otp = () => {
         { otp: otpValue }
       );
 
-      // after successfully verified you account navigate to the login
-      navigate("/login");
+      // Set success message
+      setSuccessMessage(
+        "Your Account has been verified successfully. Please Sign in to Continue."
+      );
+
+     
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
     } catch (error) {
       console.error("Error:", error.response);
       if (error.response && error.response.status === 400) {
@@ -75,9 +83,9 @@ const Otp = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-[#000000a7]">
+    <div className="min-h-screen flex justify-center items-center bg-[#e4e3e3]">
       <div className="w-full max-w-md p-6 bg-white rounded-md shadow-md">
-        <h2 className="text-2xl font-semibold text-center mb-6">Enter OTP</h2>
+        <h2 className=" mb-6">Please check your Email and Enter verification code below to verify your Account</h2>
         <form onSubmit={handleSubmit}>
           <div className="flex justify-center space-x-2">
             {otp.map((digit, index) => (
@@ -95,21 +103,26 @@ const Otp = () => {
                 onKeyDown={(e) => handleKeyPress(index, e)}
                 onFocus={() => handleFocus(index)}
                 autoFocus={index === activeIndex}
-                
               />
             ))}
           </div>
           {errorMessage && (
             <div className="text-red-500 text-center mt-2">{errorMessage}</div>
           )}
-          
+          {successMessage && ( // Render success message
+            <div className="text-green-500 text-center mt-2">
+              {successMessage}
+            </div>
+          )}
           <div className="flex justify-center mt-4">
             <button
               type="submit"
-              className="bg-green-900 text-white px-6 py-2 rounded-md"
+              className={`bg-green-900 text-white w-32 h-11 rounded ${
+                isLoading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               disabled={isLoading}
             >
-              {isLoading ? "Submitting..." : "Submit"}
+              {isLoading ? "verifying..." : "Verify"}
             </button>
           </div>
         </form>
