@@ -6,6 +6,7 @@ import { MdOutlineAddShoppingCart } from "react-icons/md";
 import { RiFolderUploadLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 import { MdContactSupport } from "react-icons/md";
+import { PiPlantFill } from "react-icons/pi";
 
 function GovSidebar() {
   return (
