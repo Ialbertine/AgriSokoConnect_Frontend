@@ -100,7 +100,6 @@ const LandingPage = () => {
         )
     }
 
-
     return (
         <>
             <div className=''>

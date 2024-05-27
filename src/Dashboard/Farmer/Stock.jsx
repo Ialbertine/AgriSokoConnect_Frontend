@@ -34,7 +34,7 @@ const Stock = () => {
         if (contentType && contentType.includes('application/json')) {
           const data = await response.json();
           console.log('Fetched data:', data); // Debug log
-          
+
           // Check if data contains the array of stocks directly
           if (data && Array.isArray(data.data)) {
             setStock(data.data);
@@ -89,23 +89,53 @@ const Stock = () => {
       <div>
         <p className='text-xl'>This is what you have in stock:</p>
       </div>
-      <div>
-        <ul>
+      <div className='px-5 flex gap-5'>
+         <ul>
           {stock.map((item) => (
-            <li key={item._id} className='border-b border-gray-200 py-4'>
-              <strong>{item.NameOfProduct}</strong>
-              <img src={item.image} alt={item.NameOfProduct} className='w-32 h-32 object-cover' />
-              <div>Type: {item.typeOfProduct}</div>
-              <div>Description: {item.description}</div>
-              <div>Quantity: {item.quantity} ton</div>
-              <div>Price per Ton: {item.pricePerTon} RWF</div>
-              <div>Stock worth: {item.totalPrice}</div> 
+            <li key={item._id} className='border-b flex gap-5 items-center border-gray-200 py-4'>
+                <strong className='pr-5 w-[15vh]'>{item.NameOfProduct}</strong>
+               {/* <img src={item.image} alt={item.NameOfProduct} className='w-32 h-32 object-cover rounded-sm' />  */}
+              <div className='w-[30vh]'>{item.typeOfProduct}</div>
+              <div className='w-[35vh]'>{item.description}</div>
+              <div className='w-[15vh]'>{item.quantity} tons</div>
+              <div className='w-[15vh]'>{item.pricePerTon} RWF</div>
+               {/* <div>Stock worth: {item.totalPrice}</div>  */}
               <div>
                 <button className=' text-white rounded-lg px-3 hover:bg-[#269553] bg-[#2d7a4a] py-1 text-lg w-[18vh] mt-3'>Update stock</button>
               </div>
             </li>
           ))}
-        </ul>
+        </ul> 
+
+        {/* <table className=' items-start table-column'>
+          <thead>
+            <tr className=''>
+              <th >
+                Type
+              </th>
+              <th className=''>
+                Description
+              </th>
+              <th className=''>
+                Quantity
+              </th>
+              <th className=''>
+                Price per ton
+              </th>
+            </tr>
+          </thead>
+          {stock.map((item) => (
+            <tr key={item._id}>
+              <td>{item.typeOfProduct}</td>
+              <td>{item.description}</td>
+              <td>{item.quantity}</td>
+              <td>{item.pricePerTon}</td>
+            </tr>
+          ))}
+
+
+
+        </table> */}
       </div>
     </div>
   );
