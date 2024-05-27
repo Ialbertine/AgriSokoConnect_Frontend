@@ -23,7 +23,7 @@ const GLandingPage = () => {
         },
       });
       console.log(response.data);
-      setFarmersWithStock(response.data.data);
+      setFarmersWithStock(response.data.farmersWithStock);
     } catch (error) {
       console.error("Fetch error: ", error);
       if (error.response && error.response.status === 401) {
