@@ -199,15 +199,6 @@ const AllOrder = () => {
           onChange={handleSearch}
           style={{ width: 300 }}
         />
-        <Link to="/create" style={{ textDecoration: "none" }}>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            style={{ padding: 15, background: "#006400" }}
-          >
-            Add Order
-          </Button>
-        </Link>
       </div>
       <DataGrid
         rows={filteredOrders
