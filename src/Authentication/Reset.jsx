@@ -1,137 +1,156 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Reset = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setLoading] = useState(false);
-  const [isSuccess, setSuccess] = useState(false);
-  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handlePasswordReset = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
-    const passwordRegex = /^.{4,10}$/;
+    if (!password || !confirmPassword) {
+      setErrorMessage("Please enter both password fields.");
+      return;
+    }
+
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setErrorMessage(
+        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character"
+      );
+      return;
+    }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      setLoading(false);
+      setErrorMessage("Passwords do not match!");
       return;
     }
 
-    if (!password.match(passwordRegex)) {
-      setError("Password must be at least 4 to 8 characters long");
-      setLoading(false);
-      return;
-    }
+    setIsLoading(true);
 
-    axios
-      .post(
-        "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/user/resetPassword",
-        {
+    try {
+      let token = localStorage.getItem("token");
+
+      if (!token) {
+        setErrorMessage("No token found. Please sign in.");
+        setIsLoading(false);
+        return;
+      }
+      const response = await axios({
+        method: "post",
+        url: "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/user/resetPassword",
+        data: {
           password: password,
-          confirmPassword: confirmPassword,
-        }
-      )
-      .then((response) => {
-        if (response.status === 200) {
-          setLoading(false);
-          setSuccess(true);
-
-          setPassword("");
-          setConfirmPassword("");
-        } else {
-          console.error("Password reset failed.");
-          setLoading(false);
-        }
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
-      .catch((error) => {
-        console.error("An error occurred:", error);
-        setLoading(false);
-      });
-  };
 
-  const closeModal = () => {
-    setSuccess(false);
+      console.log(response.data);
+
+      setIsLoading(false);
+      setSuccessMessage(response.data.message);
+
+      
+      setTimeout(() => {
+        setSuccessMessage("Reset password successful. Please sign in.");
+        setPassword("");
+        setConfirmPassword("");
+        navigate("/login");
+      }, 3000);
+    } catch (error) {
+      setIsLoading(false);
+      setErrorMessage("Failed to reset password. Please try again later.");
+
+      // Clear error message after 3 seconds
+      setTimeout(() => {
+        setErrorMessage("");
+        setPassword("");
+        setConfirmPassword("");
+      }, 3000);
+    }
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-[#000000c6]">
-      <div className="w-full max-w-md p-6 bg-white rounded-xl shadow-md">
-        <h2 className="text-2xl font-semibold text-center mb-6">
-          Reset Password
-        </h2>
-        {!isSuccess ? (
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                New Password
-              </label>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-md rounded-lg">
+        <h2 className="text-2xl font-bold text-center">Reset Password</h2>
+        {successMessage && (
+          <div className="p-4 mb-4 text-green-700 bg-green-100 border border-green-400 rounded">
+            {successMessage}
+          </div>
+        )}
+        {errorMessage && (
+          <div className="p-4 mb-4 text-red-700 bg-red-100 border border-red-400 rounded">
+            {errorMessage}
+          </div>
+        )}
+        <form onSubmit={handlePasswordReset} className="space-y-6">
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              New Password
+            </label>
+            <div className="relative mt-1">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="border mt-1 px-4 py-2 block w-full bg-[#c5c7c631] rounded-md shadow-md border-gray-300 focus:ring-blue-500"
                 required
               />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700"
+              <div
+                className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
               >
-                Confirm New Password
-              </label>
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </div>
+            </div>
+          </div>
+          <div>
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Confirm New Password
+            </label>
+            <div className="relative mt-1">
               <input
                 type="password"
                 id="confirmPassword"
+                name="confirmPassword"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="border mt-1 px-4 py-2 block w-full rounded-md shadow-md bg-[#c5c7c631] border-gray-300 focus:ring-black"
                 required
               />
             </div>
-            {error && <p className="text-red-500">{error}</p>}
-            <div className="flex justify-center">
-              <button
-                type="submit"
-                className={`bg-green-800 text-white px-4 py-2 rounded-md ${
-                  isLoading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-                disabled={isLoading}
-              >
-                {isLoading ? "Resetting..." : "Reset Password"}
-              </button>
-            </div>
-          </form>
-        ) : (
-          <SuccessPopup onClose={closeModal} />
-        )}
+          </div>
+          <button
+            type="submit"
+            className={`w-full px-4 py-2 text-white bg-green-900 rounded-md hover:bg-green-800 transition duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
+              isLoading ? "cursor-not-allowed" : ""
+            }`}
+            disabled={isLoading}
+          >
+            {isLoading ? "Loading..." : "Reset Password"}
+          </button>
+        </form>
       </div>
     </div>
   );
 };
-
-const SuccessPopup = ({ onClose }) => (
-  <div className="fixed inset-0 flex justify-center bg-gray-800 bg-opacity-50">
-    <div className="bg-white p-6 rounded-md shadow-md h-[20%] mt-6">
-      <div className="flex flex-col text-center">
-        <p className="text-green-600 mb-4 text-xl">
-          Password reset successful!
-        </p>
-        <Link to="/login" className="text-green-900 hover:underline">
-          Return to Sign In
-        </Link>
-      </div>
-      <button onClick={onClose} className="absolute top-0 right-0 p-2"></button>
-    </div>
-  </div>
-);
 
 export default Reset;

@@ -33,8 +33,16 @@ import Create from "./Dashboard/Buyer/Create";
 import ViewOrder from "./Dashboard/Buyer/ViewOrder";
 import Support from "./Dashboard/Buyer/Support";
 import BuyerProfile from "./Dashboard/Buyer/Profile";
+import Message from "./Dashboard/Buyer/Message";
 
 import ProtectedRoute from "./ProtectedRoute";
+
+import GovLayout from "./Dashboard/Government/GovLayout";
+import GLandingPage from "./Dashboard/Government/GLandingPage";
+import AllTransaction from "./Dashboard/Government/AllTransaction";
+import AllTaxes from "./Dashboard/Government/AllTaxes";
+import GSetting from "./Dashboard/Government/GSetting";
+import GSupport from "./Dashboard/Government/GSupport";
 
 const App = () => {
   return (
@@ -94,9 +102,24 @@ const App = () => {
                 path="create/:productId/:NameOfProduct"
                 element={<Create />}
               />
+              <Route path="create" element={<Create />} />
+              <Route path="message" element={<Message />} />
               <Route path="profile" element={<BuyerProfile />} />
               <Route path="view" element={<ViewOrder />} />
               <Route path="support" element={<Support />} />
+            </Route>
+          </Route>
+
+          <Route
+            path="goverment"
+            element={<ProtectedRoute allowedRoles={["goverment"]} />}
+          >
+            <Route path="" element={<GovLayout />}>
+              <Route path="" element={<GLandingPage />} />
+              <Route path="taxes" element={<AllTaxes />} />
+              <Route path="transaction" element={<AllTransaction />} />
+              <Route path="support" element={<GSupport />} />
+              <Route path="setting" element={<GSetting />} />
             </Route>
           </Route>
         </Route>

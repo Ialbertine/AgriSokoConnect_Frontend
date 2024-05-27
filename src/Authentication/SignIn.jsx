@@ -15,12 +15,9 @@ const SignIn = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
- 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
     if (!validateForm()) return;
 
     setIsSubmitting(true);
@@ -28,6 +25,9 @@ const SignIn = () => {
     setSuccessMessage("");
 
     try {
+      // Add a 5-second delay before making the API request
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+
       const response = await axios.post(
         "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/user/signin",
         {
@@ -40,7 +40,8 @@ const SignIn = () => {
 
       // Extract role data from the response
       const { role, token } = response.data;
-      console.log(role)  
+      console.log(role);
+
       // Store token and role in local storage
       localStorage.setItem("token", token);
       localStorage.setItem("userRole", role);
@@ -53,8 +54,10 @@ const SignIn = () => {
         redirectPath = "/dashboard/farmer";
       } else if (role === "buyer") {
         redirectPath = "/dashboard/buyer";
-      } else if (role === "government") {
-        redirectPath = "/dashboard/government";
+      } else if (role === "goverment") {
+        redirectPath = "/dashboard/goverment";
+      } else {
+        redirectPath = "/";
       }
 
       navigate(redirectPath);
@@ -62,7 +65,7 @@ const SignIn = () => {
       console.error("Login error: ", error.response || error.message);
       setErrorMessage(
         error.response && error.response.status === 401
-          ? "An error occured, please try again"
+          ? "An error occurred, please try again"
           : "Invalid username or password. Please try again."
       );
     } finally {
@@ -171,7 +174,9 @@ const SignIn = () => {
           )}
           <button
             type="submit"
-            className="w-full bg-green-900 text-white py-2 rounded-md hover:bg-[#378000] transition duration-300 mb-3"
+            className={`w-full bg-green-900 text-white py-2 rounded-md hover:bg-[#378000] transition duration-300 mb-3 ${
+              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
             {isSubmitting ? "Loading..." : "Login"}
           </button>

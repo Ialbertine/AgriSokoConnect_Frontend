@@ -48,10 +48,10 @@ const AllOrder = () => {
       }
 
       const data = await response.json();
-      console.log(data);
+      console.log("Fetched Orders:", data);
       setOrderData(data.data);
     } catch (error) {
-      console.log(error);
+      console.error("Fetch Orders Error:", error);
       setError("Failed to fetch orders");
     } finally {
       setIsLoading(false);
@@ -69,7 +69,9 @@ const AllOrder = () => {
       if (!response.ok) {
         throw new Error("Failed to delete order");
       }
-      setOrders((prevOrders) => prevOrders.filter((order) => order.id !== id));
+      setOrderData((prevOrders) =>
+        prevOrders.filter((order) => order.id !== id)
+      );
     } catch (error) {
       console.error("Error deleting order:", error);
       setError(error.message);
@@ -78,7 +80,7 @@ const AllOrder = () => {
 
   const handleEdit = (id) => {
     setEditingOrderId(id);
-    const order = orders.find((order) => order.id === id);
+    const order = orderData.find((order) => order.id === id);
     setEditedOrder(order);
   };
 
@@ -98,7 +100,7 @@ const AllOrder = () => {
         throw new Error("Failed to update order");
       }
       const updatedOrder = await response.json();
-      setOrders((prevOrders) =>
+      setOrderData((prevOrders) =>
         prevOrders.map((order) =>
           order.id === editingOrderId ? updatedOrder : order
         )
@@ -167,7 +169,7 @@ const AllOrder = () => {
       searchQuery &&
       order.productName.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
+  
   return (
     <div
       style={{
@@ -197,15 +199,6 @@ const AllOrder = () => {
           onChange={handleSearch}
           style={{ width: 300 }}
         />
-        <Link to="/create" style={{ textDecoration: "none" }}>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            style={{ padding: 15, background: "#006400" }}
-          >
-            Add Order
-          </Button>
-        </Link>
       </div>
       <DataGrid
         rows={filteredOrders

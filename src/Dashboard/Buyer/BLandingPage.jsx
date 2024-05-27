@@ -24,13 +24,13 @@ const BLandingPage = () => {
     try {
       const response = await axios({
         method: "GET",
-        url: "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/stock/retrieve",
+        url: "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/stock/getAll",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       console.log(response.data);
-      setFetch(response.data.stocks);
+      setFetch(response.data.data);
     } catch (error) {
       console.log(error);
       setError("Failed to fetch stock data");

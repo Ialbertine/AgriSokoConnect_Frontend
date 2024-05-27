@@ -5,10 +5,10 @@ import { RiLogoutCircleLine } from "react-icons/ri";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
 import { RiFolderUploadLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
-import { PiPlantFill } from "react-icons/pi";
 import { MdContactSupport } from "react-icons/md";
+import { PiPlantFill } from "react-icons/pi";
 
-function BuyerSideBar() {
+function GovSidebar() {
   return (
     <>
       <div className=" flex flex-col justify-between text-2xl text-green-900 border-r-2 shadow-xl px-5 py-10 h-[100vh]">
@@ -18,7 +18,7 @@ function BuyerSideBar() {
           </div>
           <div className="flex items-center gap-5">
             <Link
-              to="/dashboard/buyer"
+              to="/dashboard/goverment"
               className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
             >
               <IoMdStats />
@@ -27,40 +27,31 @@ function BuyerSideBar() {
           </div>
           <div className="flex items-center gap-5">
             <Link
-              to="/dashboard/buyer/allorders"
+              to="/dashboard/goverment/taxes"
               className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
             >
               <MdOutlineAddShoppingCart />
-              <button>Orders History</button>
+              <button>All Taxes</button>
             </Link>
           </div>
           <div className="flex items-center gap-5">
             <Link
-              to="/dashboard/buyer/create"
+              to="/dashboard/goverment/transaction"
               className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
             >
               <RiFolderUploadLine />
-              <button>Create Order</button>
-            </Link>
-          </div>
-          <div className="flex items-center gap-5">
-            <Link
-              to="/dashboard/buyer/message"
-              className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
-            >
-              <PiPlantFill />
-              <button>Message</button>
+              <button>All Transction</button>
             </Link>
           </div>
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-5">
             <Link
-              to="/dashboard/buyer/profile"
+              to="/dashboard/goverment/setting"
               className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
             >
               <CgProfile />
-              <button>Profile</button>
+              <button>Setting</button>
             </Link>
           </div>
           <div className="flex items-center gap-5">
@@ -74,7 +65,7 @@ function BuyerSideBar() {
           </div>
           <div className="flex items-center gap-5">
             <Link
-              to="/dashboard/buyer/support"
+              to="/dashboard/goverment/support"
               className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
             >
               <MdContactSupport />
@@ -87,4 +78,4 @@ function BuyerSideBar() {
   );
 }
 
-export default BuyerSideBar;
+export default GovSidebar;
