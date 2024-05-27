@@ -1,127 +1,271 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, Tooltip, XAxis } from 'recharts'
-import { CountBuyers, CountFarmers } from './Apis';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell } from 'recharts';
 
 const FirstPage = () => {
 
-    const [farmers, setFarmers] = useState([]);
     const [buyers, setBuyers] = useState([]);
+    const [farmers, setFarmers] = useState([]);
+    const [stock, setStock] = useState([]);
+    const [orders, setOrders] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    useEffect(() =>{
-        CountFarmers()
-        .then((response) =>{
-            console.log(response);
-            setFarmers(response);
-        })
-        .catch((error) =>{
-            console.log(error);
-        })
-    })
+    //   Fetcing total farmers 
 
-    useEffect(() =>{
-        CountBuyers()
-        .then((response) =>{
-            console.log(response);
-            setBuyers(response);
-        })
-        .catch((error) =>{
-            console.log(error);
-        })
-    })
+    useEffect(() => {
+        const fetchTotalFarmers = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    setError('No token found, please log in');
+                    setLoading(false);
+                    return;
+                }
+
+                const response = await fetch('https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/admin/totalFarmer', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+
+                const contentType = response.headers.get('content-type') || '';
+                if (!contentType.includes('application/json')) {
+                    //   throw new Error(`Unexpected response format: ${contentType}`);
+                }
+
+                const data = await response.json();
+                console.log('Fetched data:', data); // Debug log
+
+                if (data && typeof data.farmers === 'number') {
+                    setBuyers(data.farmers);
+                } else {
+                    //   console.error('Unexpected data structure:', data); // Debug log
+                    //   throw new Error('Response data does not contain expected farmers array');
+                }
+            } catch (error) {
+                console.error('Error fetching farmers:', error); // Debug log
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+
+        const fetchTotalBuyers = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    setError('No token found, please log in');
+                    setLoading(false);
+                    return;
+                }
+
+                const response = await fetch('https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/admin/totalBuyer', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+
+                const contentType = response.headers.get('content-type') || '';
+                if (!contentType.includes('application/json')) {
+                    // throw new Error(`Unexpected response format: ${contentType}`);
+                }
+
+                const data = await response.json();
+                console.log('Fetched data (buyers):', data);
+
+                if (data && typeof data.buyers === 'number') {
+                    setBuyers(data.buyers);
+                } else {
+                    // console.error('Unexpected data structure:', data);
+                    // throw new Error('Response data does not contain expected buyers count');
+                }
+            } catch (error) {
+                console.error('Error fetching buyers:', error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const fetchTotalStock = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    setError('No token found, please log in');
+                    setLoading(false);
+                    return;
+                }
+
+                const response = await fetch('https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/admin/totalStock', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+
+                const contentType = response.headers.get('content-type') || '';
+                if (!contentType.includes('application/json')) {
+                    // throw new Error(`Unexpected response format: ${contentType}`);
+                }
+
+                const data = await response.json();
+                console.log('Fetched data (stock):', data);
+
+                if (data && typeof data.stocks === 'number') {
+                    setStock(data.stocks);
+                } else {
+                    // console.error('Unexpected data structure:', data);
+                    // throw new Error('Response data does not contain expected buyers count');
+                }
+            } catch (error) {
+                console.error('Error fetching buyers:', error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const fetchTotalOrders = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    setError('No token found, please log in');
+                    setLoading(false);
+                    return;
+                }
+
+                const response = await fetch('https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/admin/totalOrder', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+
+                const contentType = response.headers.get('content-type') || '';
+                if (!contentType.includes('application/json')) {
+                    // throw new Error(`Unexpected response format: ${contentType}`);
+                }
+
+                const data = await response.json();
+                console.log('Fetched data (orders):', data);
+
+                if (data && typeof data.orders === 'number') {
+                    setOrders(data.orders);
+                } else {
+                    // console.error('Unexpected data structure:', data);
+                    // throw new Error('Response data does not contain expected buyers count');
+                }
+            } catch (error) {
+                console.error('Error fetching buyers:', error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const fetchTotalUsers = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    setError('No token found, please log in');
+                    setLoading(false);
+                    return;
+                }
+
+                const response = await fetch('https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/admin/totalUsers', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+
+                const contentType = response.headers.get('content-type') || '';
+                if (!contentType.includes('application/json')) {
+                    throw new Error(`Unexpected response format: ${contentType}`);
+                }
+
+                const data = await response.json();
+                console.log('Fetched data (users):', data);
+
+                if (data && typeof data.users === 'number') {
+                    setUsers(data.users);
+                } else {
+                    // console.error('Unexpected data structure:', data);
+                    // throw new Error('Response data does not contain expected buyers count');
+                }
+            } catch (error) {
+                console.error('Error fetching buyers:', error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        // for BARCHART 
+        fetchTotalFarmers();
+        fetchTotalBuyers();
+
+        // for PIE CHART 
+        fetchTotalStock();
+        fetchTotalOrders();
+        fetchTotalUsers();
+    }, []);
+
+
+    if (loading) {
+        return <div>Loading...</div>
+    };
+
+    if (error) {
+        // return <div>Error: {error}</div>
+    };
+
+    // BARCHART data 
 
     const data = [
         {
-            name: 'Jan',
-            Farmers: 20,
-            Buyers: 40,
+            name: 'Farmers',
+            count: farmers
+
         },
         {
-            name: 'Feb',
-            Farmers: 70,
-            Buyers: 80,
+            name: 'Buyers',
+            count: buyers
+
         },
-        {
-            name: 'Mar',
-            Farmers: 30,
-            Buyers: 50,
-        },
-        {
-            name: 'Apr',
-            Farmers: 90,
-            Buyers: 160,
-        },
-        {
-            name: 'May',
-            Farmers: 100,
-            Buyers: 80,
-        },
-        {
-            name: 'Jun',
-            Farmers: 170,
-            Buyers: 90,
-        },
-        {
-            name: 'July',
-            Farmers: 120,
-            Buyers: 180,
-        },
-        {
-            name: 'Aug',
-            Farmers: 130,
-            Buyers: 150,
-        },
-        {
-            name: 'Sep',
-            Farmers: 130,
-            Buyers: 190,
-        },
-        {
-            name: 'Oct',
-            Farmers: 130,
-            Buyers: 200,
-        },
-        {
-            name: 'Nov',
-            Farmers: 130,
-            Buyers: 140,
-        },
-        {
-            name: 'Dec',
-            Farmers: 190,
-            Buyers: 100,
-        },
+    ];
+
+    // PIECHART data 
+
+    const PieData = [
+        { name: 'Users', value: users },
+        { name: 'Stocks', value: stock },
+        { name: 'Orders', value: orders },
     ]
+    const COLORS = ['#00C49F', '#FFBB28', '#FF8042'];
 
-    const stats = [
-        {
-            name: 'Transactions',
-            value: 70,
-        },
-        {
-            name: 'uploads',
-            value: 50,
-        },
-        {
-            name: 'Accounts',
-            value: 40,
-        }
-    ]
-
-    const RADIAN = Math.PI / 100
-    const COLORS = ['#00C49F', '#FFBB28', '#FF8042']
-
-    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
-        const radius = innerRadius + (outerRadius - innerRadius) * 0.5
-        const x = cx + radius * Math.cos(-midAngle * RADIAN)
-        const y = cy + radius * Math.sin(-midAngle * RADIAN)
-
-        return (
-            <text x={x} y={y} fill='white' textAnchor={x > cx ? 'start' : 'end'} dominantBaseline='central'>
-                {`${(percent * 100).toFixed(0)}%`}
-            </text>
-        )
-    }
+    // Received orders 
 
     const RecentOrderData = [
         {
@@ -183,19 +327,19 @@ const FirstPage = () => {
 
     const PopularProduct = [
         {
-            id:'10',
-            product_name:'Rice',
-            product_price:'RWF 193,489/1t'
+            id: '10',
+            product_name: 'Rice',
+            product_price: 'RWF 193,489/1t'
         },
         {
-            id:'11',
-            product_name:'Maize',
-            product_price:'RWF 321,489 /1t'
+            id: '11',
+            product_name: 'Maize',
+            product_price: 'RWF 321,489 /1t'
         },
         {
-            id:'12',
-            product_name:'beans',
-            product_price:'RWF 128`,489 /1t'
+            id: '12',
+            product_name: 'beans',
+            product_price: 'RWF 128`,489 /1t'
         },
     ]
 
@@ -214,30 +358,40 @@ const FirstPage = () => {
                             <strong className=''>General Statistics</strong>
                         </div>
                         <div className='h-[20rem] '>
-                            <div className='w-full mt-3 flex'>
-                                <BarChart className='' height={300} margin={{ top: 20, right: 10, left: 10, bottom: 0 }} data={data} width={700}>
-                                    <CartesianGrid strokeDasharray="3 3 0 0" vertical={false} />
-                                    <XAxis dataKey={name} />
-                                    <XAxis />
+                            <div className='w-full mt-3 flex flex-col'>
+                                <BarChart width={600} height={300} data={data}>
+                                    {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                                    <XAxis dataKey="users" />
+                                    <YAxis />
                                     <Tooltip />
                                     <Legend />
-                                    <Bar dataKey='Farmers' fill='#269553' />
-                                    <Bar dataKey='Buyers' fill='#B3C860' />
+                                    <Bar dataKey="count" fill="#269553" name="Farmers" />
+                                    <Bar dataKey="count" fill="#B3C860" name="Buyers" />
                                 </BarChart>
                             </div>
                         </div>
                     </div>
                     <div className='w-[59h]'>
                         <div className='bg-[#f2f2f2]'>
-                            <PieChart width={400} height={300}>
-                                <Pie data={stats} cx='50%' cy='45%' labelLine={false} label={renderCustomizedLabel} outerRadius={105} fill='#B3C860' dataKey='value'>
-                                    {data.map((_, index) => (
+                            <PieChart width={300} height={300}>
+                                <Pie
+                                    dataKey="value"
+                                    data={PieData}
+                                    cx="50%"
+                                    cy="50%"
+                                    fill="#8884d8"
+                                    label
+                                >
+                                    {PieData.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
                                 </Pie>
+                                <Tooltip />
                                 <Legend />
                             </PieChart>
                         </div>
+
+
                         <div className='bg-[#f2f2f2] mt-2 h-[21vh] p-4'>
                             <strong className=''>Transactions</strong>
                             <div className='flex mt-2 text-[#B3C860] text-center'>
@@ -250,7 +404,7 @@ const FirstPage = () => {
                                     <p>Canceled</p>
                                 </div>
                                 <div className='bg-[#269553] rounded-lg ml-3 w-[14vh] h-[12vh] p-2'>
-                                    <strong className='text-4xl'>1%</strong> 
+                                    <strong className='text-4xl'>1%</strong>
                                     <p>Failed</p>
                                 </div>
                             </div>
@@ -303,13 +457,13 @@ const FirstPage = () => {
                         </div>
                         <div>
                             <div>
-                                
+
                                 <div className='flex  flex-wrap gap-3 pt-5 p-3'>
                                     {PopularProduct.map((order) =>
                                         <p key={order.id}>
                                             <p>{`Product id: ${order.id}`}</p>
-                                            <p>  
-                                            <p>{`Product name: ${ order.product_name}`}</p>
+                                            <p>
+                                                <p>{`Product name: ${order.product_name}`}</p>
                                             </p>
                                             <p>{`Product price: ${order.product_price}`}</p>
                                         </p>

@@ -74,8 +74,8 @@ const Farmers = () => {
             <p className='text-5xl'><b>Our Farmers</b></p>
           </div>
         </div>
-        <div className='lg:px-44 md:px-20 sm:px-10 py-10'>
-          <strong className='text-xl flex lg:items-center md:items-center sm:items-start lg:justify-center md:justify-center sm:justify-start pb-7'>Our Farmers List:</strong>
+        <strong className='text-xl pt-10 flex lg:items-center md:items-center sm:items-start justify-center'>Our Farmers List:</strong>
+        <div className='flex pl-44 justify-center py-10'>
           <div>
             {farmers.length === 0 ? (
               <p>No farmers available</p>

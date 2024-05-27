@@ -1,90 +1,109 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import { VscLoading } from "react-icons/vsc";
+import Accordion from '../../Pages/Accordion';
 
 const Cooperatives = () => {
 
   const [farmers, setFarmers] = useState([]);
-  const [token, setToken] = useState();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const getToken = () =>{
-    const Token = localStorage.getItem('token');
-    console.log('token: ', Token);
-    setToken(Token);
-  }
+  useEffect(() => {
+    const fetchFarmers = async () => {
+      try {
+        const response = await fetch('https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/user/getAllFarmers');
 
-  useEffect(() =>{
-    getToken();
-  }, [])
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
 
-  const FetchFarmers =() =>{
-    axios ({
-      method:'GET',
-      url:'http://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/admin/farmers',
-      headers:{
-        Accept:'application/json',
-        Authorization:`Bearer ${token}`
+        const data = await response.json();
+
+        if (data.farmersWithStock && Array.isArray(data.farmersWithStock)) {
+          setFarmers(data.farmersWithStock);
+        } else {
+          throw new Error('Expected an array but received a different type of response');
+        }
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
       }
-    })
-    .then((response) =>{
-      console.log(response);
-      setFarmers(response);
-    })
-    .catch((err) =>{
-      console.log(err);
-    })
+    };
+
+    fetchFarmers();
+  }, []);
+
+  if (loading) {
+    return (
+      <div>
+        <div className='relative'>
+        <div className='mb-5 p-10 bg-[#f2f2f2]'>
+          <strong className='text-xl'>MANAGE FARMERS (Cooperative)</strong>
+        </div>
+          {/* <img src='farmerlogin.webp' className='h-[50vh] w-full object-cover'></img> */}
+          <div className='absolute lg:top-48 md:top-44 sm:top-44 lg:left-[92vh] md:left-[42vh] sm:left-[8vh] text-white'>
+            {/* <p className='text-5xl'><b>Our Farmers</b></p> */}
+          </div>
+        </div>
+        <div className='pt-20 flex justify-center gap-5 text-xl h-[80vh] text-black font-semibold'>
+          <VscLoading className='animate-spin' />
+          <p>Loading</p>
+        </div>
+      </div>
+    )
   }
 
-  useEffect(() =>{
-    FetchFarmers();
-  }, [])
-
+  if (error) {
+    return (
+      <div className='relative'>
+        <img src='farmerlogin.webp' className='h-[50vh] w-full object-cover'></img>
+        <div className='absolute lg:top-48 md:top-44 sm:top-44 lg:left-[92vh] md:left-[42vh] sm:left-[8vh] text-white'>
+          {/* <p className='text-5xl'><b>Our Farmers</b></p> */}
+        </div>
+        <div className=' pt-10 px-10 text-xl font-semibold'>Some error occured!</div>
+      </div>
+    )
+  }
   return (
     <>
       <div className='p-10 flex flex-col gap-5 bg-[#f2f2f2]'>
         <div className='mb-5'>
           <strong className='text-xl'>MANAGE FARMERS (Cooperative)</strong>
         </div>
-        {/* <div className='flex flex-wrap gap-4'>
-          <div className='w-[20rem] flex flex-col gap-5'>
-            <img src='../Tuzamurane.jpg' className='rounded-lg w-[19rem] h-[12rem]'></img>
-            <div>
-              <p>Name: <strong>Tuzamurane cooperative</strong></p>
-              <p>location: <strong>Musanze District</strong></p>
-              <p>Crops type: <strong>Ananas</strong></p>
-              <p>Land size: <strong>20 ha</strong></p>
-            </div>
-            <div className='flex gap-5 text-lg'>
-              <button className='text-white rounded-lg px-3 bg-[#db5050] hover:bg-[#ad3e3e] p-1'>Block</button>
-              <button className='text-white rounded-lg px-3 bg-[#269553] hover:bg-[#2d7a4a] p-1'>Suspend</button>
-            </div>
+        <div className='lg:px-0 md:px-20 sm:px-10'>
+          {/* <strong className='text-xl flex lg:items-center md:items-center sm:items-start lg:justify-center md:justify-center sm:justify-start pb-7'>Our Farmers List:</strong> */}
+          <div>
+            {farmers.length === 0 ? (
+              <p>No farmers available</p>
+            ) : (
+              <ul className='flex lg:flex-row lg:flex-wrap md:flex-row sm:flex-col gap-10'>
+                {farmers.map((farmer, index) => (
+                  <li key={index} className=' lg:w-[50vh] md:w-[40vh] sm:w-[39vh] border shadow-md shadow-slate-400 py-3 px-5 flex flex-col gap-3'>
+                    <h2 className='text-2xl font-bold'>{farmer.farmer.toUpperCase()}</h2>
+                    <p className='text-lg font-thin'>My farming efforts focus on growing:</p>
+                    <ul className='flex flex-col'>
+                      {farmer.stock.map((product) => (
+                        <div>
+                          <li key={product._id} className='list'>
+                            <img src={product.image} className='h-[25vh] w-full object-cover pb-3'></img>
+                            <Accordion title={product.NameOfProduct.toUpperCase()}
+                              answer={' Specification: ' + product.typeOfProduct}
+                              answer1={' Quantity: ' + product.quantity + ' ton'}
+                              answer2={' Price per ton: ' + product.pricePerTon + ' RWF'}
+                            />
+                          </li>
+                        </div>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
-          <div className='w-[20rem] flex flex-col gap-5'>
-            <img src='../harvest.jpg' className='rounded-lg w-[19rem] h-[12rem]'></img>
-            <div>
-              <p>Name: <strong>Bikorimana Boniface</strong></p>
-              <p>location: <strong>Rusizi District</strong></p>
-              <p>Crops type: <strong>Rice</strong></p>
-              <p>Land size: <strong>12 ha</strong></p>
-            </div>
-            <div className='flex gap-5 text-lg'>
-              <button className='text-white rounded-lg px-3 bg-[#db5050] hover:bg-[#ad3e3e] p-1'>Block</button>
-              <button className='text-white rounded-lg px-3 bg-[#269553] hover:bg-[#2d7a4a] p-1'>Suspend</button>
-            </div>
-          </div>
-          <div className='w-[20rem] flex flex-col gap-5'>
-            <img src='../KopenyaruCooperative.jpg' className='rounded-lg w-[19rem] h-[12rem]'></img>
-            <div>
-              <p>Name: <strong>Kopenyaru cooperative</strong></p>
-              <p>location: <strong>Gatsibo District</strong></p>
-              <p>Crops type: <strong>Coffee</strong></p>
-              <p>Land size: <strong>63 ha</strong></p>
-            </div>
-            <div className='flex gap-5 text-lg'>
-              <button className='text-white rounded-lg px-3 bg-[#db5050] hover:bg-[#ad3e3e] p-1'>Block</button>
-              <button className='text-white rounded-lg px-3 bg-[#269553] hover:bg-[#2d7a4a] p-1'>Suspend</button>
-            </div>
-          </div>
-        </div> */}
+        </div>
+
       </div>
     </>
   )
