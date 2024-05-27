@@ -82,25 +82,29 @@ const BLandingPage = () => {
                 <img
                   src={stockItem.image}
                   alt={stockItem.NameOfProduct}
-                  className="w-32 h-32 object-cover mb-4"
+                  className="w-[65%] h-[10rem] object-cover mb-4"
                 />
                 <span className="text-xl font-medium">
                   Product Name: {stockItem.NameOfProduct}
                 </span>
-                <span className="text-gray-600">
-                  Des: {stockItem.description}
-                </span>
-                <div className="flex gap-2 text-xl font-medium">
-                  <span>Price PerTon: {stockItem.pricePerTon}</span>
-                  <span>RWF</span>
+                <div className="text-left pt-3">
+                  <div className="pb-2">
+                    <span className="text-gray-600">
+                      {stockItem.description}
+                    </span>
+                  </div>
+                  <div className="flex gap-2 text-xl font-medium">
+                    <span>Price PerTon: {stockItem.pricePerTon}</span>
+                    <span>RWF</span>
+                  </div>
+                  <div className="flex gap-2 text-xl font-medium">
+                    <span>Quantity: {stockItem.quantity}</span>
+                    <span>Ton</span>
+                  </div>
+                  <span className="text-xl font-medium">
+                    Type of Product: {stockItem.typeOfProduct}
+                  </span>
                 </div>
-                <div className="flex gap-2 text-xl font-medium">
-                  <span>Quantity: {stockItem.quantity}</span>
-                  <span>Ton</span>
-                </div>
-                <span className="text-xl font-medium">
-                  Type of Product: {stockItem.typeOfProduct}
-                </span>
               </Link>
             ))}
           </div>
