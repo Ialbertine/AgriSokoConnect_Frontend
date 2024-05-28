@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { IoMdStats } from "react-icons/io";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
-import { RiFolderUploadLine } from "react-icons/ri";
-import { CgProfile } from "react-icons/cg";
+import { TbTransactionDollar } from "react-icons/tb";
+import { IoMdSettings } from "react-icons/io";
 import { MdContactSupport } from "react-icons/md";
-import { PiPlantFill } from "react-icons/pi";
+
 
 function GovSidebar() {
   return (
@@ -25,22 +25,23 @@ function GovSidebar() {
               <button>Dashboard</button>
             </Link>
           </div>
+
+          <div className="flex items-center gap-5">
+            <Link
+              to="/dashboard/goverment/transaction"
+              className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
+            >
+              <TbTransactionDollar />
+              <button>Transactions</button>
+            </Link>
+          </div>
           <div className="flex items-center gap-5">
             <Link
               to="/dashboard/goverment/taxes"
               className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
             >
               <MdOutlineAddShoppingCart />
-              <button>All Taxes</button>
-            </Link>
-          </div>
-          <div className="flex items-center gap-5">
-            <Link
-              to="/dashboard/goverment/transaction"
-              className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
-            >
-              <RiFolderUploadLine />
-              <button>All Transction</button>
+              <button>Taxes</button>
             </Link>
           </div>
         </div>
@@ -50,7 +51,7 @@ function GovSidebar() {
               to="/dashboard/goverment/setting"
               className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
             >
-              <CgProfile />
+              <IoMdSettings />
               <button>Setting</button>
             </Link>
           </div>
