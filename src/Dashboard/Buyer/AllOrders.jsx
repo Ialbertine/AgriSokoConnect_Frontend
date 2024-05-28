@@ -1,26 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { DataGrid } from "@mui/x-data-grid";
-import { Button, TextField, IconButton } from "@mui/material";
+import { Card, CardContent, Typography, TextField, IconButton, Button, Grid} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const AllOrder = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [orders, setOrders] = useState([]);
   const [editingOrderId, setEditingOrderId] = useState(null);
   const [editedOrder, setEditedOrder] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [orderData, setOrderData] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     fetchOrders();
-  }, []); // Fetch orders on component mount
+  }, []);
 
   const fetchOrders = async () => {
     setIsLoading(true);
@@ -32,27 +29,20 @@ const AllOrder = () => {
       setIsLoading(false);
       return;
     }
-
     try {
-      const response = await fetch(
-        "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/retrieve",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios({
+        method: "GET",
+        url: "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/retrieve",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch orders");
-      }
-
-      const data = await response.json();
-      console.log("Fetched Orders:", data);
-      setOrderData(data.data);
+      console.log("Fetched Orders:", response.data);
+      setOrderData(response.data.data || []);
     } catch (error) {
-      console.error("Fetch Orders Error:", error);
-      setError("Failed to fetch orders");
+      console.log(error);
+      setError("Failed to fetch stock data");
     } finally {
       setIsLoading(false);
     }
@@ -70,7 +60,7 @@ const AllOrder = () => {
         throw new Error("Failed to delete order");
       }
       setOrderData((prevOrders) =>
-        prevOrders.filter((order) => order.id !== id)
+        prevOrders.filter((order) => order._id !== id)
       );
     } catch (error) {
       console.error("Error deleting order:", error);
@@ -80,7 +70,7 @@ const AllOrder = () => {
 
   const handleEdit = (id) => {
     setEditingOrderId(id);
-    const order = orderData.find((order) => order.id === id);
+    const order = orderData.find((order) => order._id === id);
     setEditedOrder(order);
   };
 
@@ -96,20 +86,19 @@ const AllOrder = () => {
           body: JSON.stringify(editedOrder),
         }
       );
-      if (!response.ok) {
-        throw new Error("Failed to update order");
+      if (response.ok) {
+        setSuccessMessage("Profile updated successfully");
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 20000);
+      } else {
+        const errorMessage = await response.text(); 
+        console.error("Failed to update profile:", errorMessage);
       }
-      const updatedOrder = await response.json();
-      setOrderData((prevOrders) =>
-        prevOrders.map((order) =>
-          order.id === editingOrderId ? updatedOrder : order
-        )
-      );
-      setEditingOrderId(null);
-      setEditedOrder({});
     } catch (error) {
-      console.error("Error updating order:", error);
-      setError(error.message);
+      console.error("Error updating profile:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -124,56 +113,17 @@ const AllOrder = () => {
     setSearchQuery(event.target.value);
   };
 
-  const handlePageChange = (newPage) => {
-    setPage(newPage);
-  };
+  const filteredOrders = Array.isArray(orderData)
+    ? orderData.filter(
+        (order) =>
+          order.customer &&
+          order.customer.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
 
-  const handleRowsPerPageChange = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const columns = [
-    { field: "id", headerName: "ID", width: 50 },
-    { field: "productName", headerName: "Product Name", width: 100 },
-    { field: "quantity", headerName: "Quantity", width: 90 },
-    { field: "quality", headerName: "Quality", width: 100 },
-    { field: "phoneNumber", headerName: "Phone Number", width: 110 },
-    { field: "shippingAddress", headerName: "Shipping Address", width: 150 },
-    { field: "Date", headerName: "Date", width: 110 },
-    { field: "status", headerName: "Status", width: 120 },
-    { field: "price", headerName: "Price", width: 120 },
-    {
-      field: "actions",
-      headerName: "Actions",
-      width: 150,
-      renderCell: (params) => (
-        <>
-          <IconButton onClick={() => handleDelete(params.row.id)}>
-            <DeleteIcon color="error" />
-          </IconButton>
-          <IconButton onClick={() => handleEdit(params.row.id)}>
-            <EditIcon color="primary" />
-          </IconButton>
-          <IconButton>
-            <VisibilityIcon color="primary" />
-          </IconButton>
-        </>
-      ),
-    },
-  ];
-
-  const filteredOrders = orderData.filter(
-    (order) =>
-      order.productName &&
-      searchQuery &&
-      order.productName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-  
   return (
     <div
       style={{
-        height: 400,
         width: "90%",
         display: "flex",
         flexDirection: "column",
@@ -200,49 +150,74 @@ const AllOrder = () => {
           style={{ width: 300 }}
         />
       </div>
-      <DataGrid
-        rows={filteredOrders
-          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-          .map((order) =>
-            order.id === editingOrderId ? { ...order, ...editedOrder } : order
-          )}
-        columns={columns}
-        pageSize={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
-        onPageSizeChange={handleRowsPerPageChange}
-        rowCount={filteredOrders.length}
-        onPageChange={(params) => handlePageChange(params.page)}
-        paginationMode="server"
-      />
+      <Grid container spacing={2}>
+        {filteredOrders.map((order) => (
+          <Grid item xs={12} sm={6} md={4} key={order._id}>
+            <Card>
+              <CardContent>
+                {order.selectedStockItems &&
+                  order.selectedStockItems.map((item, index) => (
+                    <div key={index}>
+                      <Typography variant="h6">
+                        Product Name: {item.NameOfProduct}
+                      </Typography>
+                      <Typography variant="h6">
+                        Quality of Product: {item.typeOfProduct}
+                      </Typography>
+                      <Typography variant="body1">
+                        Quantity: {item.quantity} Ton
+                      </Typography>
+                    </div>
+                  ))}
+                <Typography variant="body1">
+                  Phone Number: {order.phoneNumber}
+                </Typography>
+                <Typography variant="body1">
+                  Shipping Address: {order.shippingAddress}
+                </Typography>
+                <Typography variant="body1">
+                  Total Amount: {order.totalAmount}
+                </Typography>
+                <Typography variant="body1">Status: {order.status}</Typography>
+                <Typography variant="body2">
+                  Created At: {new Date(order.createdAt).toLocaleString()}
+                </Typography>
+                <div>
+                  <IconButton onClick={() => handleDelete(order._id)}>
+                    <DeleteIcon color="error" />
+                  </IconButton>
+                  <IconButton onClick={() => handleEdit(order._id)}>
+                    <EditIcon color="primary" />
+                  </IconButton>
+                  <Link to="/dashboard/buyer/view">
+                    <IconButton>
+                      <VisibilityIcon color="primary" />
+                    </IconButton>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
       {editingOrderId && (
         <div style={{ marginTop: 16 }}>
+          <h3 className="text-2xl mb-3 font-medium text-green-600">
+            Edit Order
+          </h3>
           <TextField
-            label="Product Name"
+            label="Total Items"
             variant="outlined"
-            value={editedOrder.productName || ""}
-            onChange={(e) => handleEditOrderData("productName", e.target.value)}
-            style={{ marginRight: 16 }}
-          />
-          <TextField
-            label="Quantity"
-            variant="outlined"
-            value={editedOrder.quantity || ""}
-            onChange={(e) => handleEditOrderData("quantity", e.target.value)}
-            style={{ marginRight: 16 }}
-          />
-          <TextField
-            label="Quality"
-            variant="outlined"
-            value={editedOrder.quality || ""}
-            onChange={(e) => handleEditOrderData("quality", e.target.value)}
-            style={{ marginRight: 16 }}
+            value={editedOrder.totalItems || ""}
+            onChange={(e) => handleEditOrderData("totalItems", e.target.value)}
+            style={{ marginRight: 16, marginTop: 16 }}
           />
           <TextField
             label="Phone Number"
             variant="outlined"
             value={editedOrder.phoneNumber || ""}
             onChange={(e) => handleEditOrderData("phoneNumber", e.target.value)}
-            style={{ marginRight: 16 }}
+            style={{ marginRight: 16, marginTop: 16 }}
           />
           <TextField
             label="Shipping Address"
@@ -251,30 +226,39 @@ const AllOrder = () => {
             onChange={(e) =>
               handleEditOrderData("shippingAddress", e.target.value)
             }
-            style={{ marginRight: 16 }}
+            style={{ marginRight: 16, marginTop: 16 }}
           />
           <TextField
             label="Status"
             variant="outlined"
             value={editedOrder.status || ""}
             onChange={(e) => handleEditOrderData("status", e.target.value)}
-            style={{ marginRight: 16 }}
+            style={{ marginRight: 16, marginTop: 16 }}
           />
           <TextField
-            label="Price"
+            label="Total Amount"
             variant="outlined"
-            value={editedOrder.price || ""}
-            onChange={(e) => handleEditOrderData("price", e.target.value)}
-            style={{ marginRight: 16 }}
+            value={editedOrder.totalAmount || ""}
+            onChange={(e) => handleEditOrderData("totalAmount", e.target.value)}
+            style={{ marginRight: 16, marginTop: 16 }}
           />
           <Button
             variant="contained"
             color="primary"
             onClick={handleSaveEdit}
-            style={{ padding: 10, marginTop: 10 }}
+            style={{
+              paddingLeft: 20,
+              paddingRight: 20,
+              paddingBottom: 10,
+              paddingTop: 10,
+              marginTop: 18,
+              backgroundColor: "green",
+            }}
+            disabled={isLoading}
           >
-            Save
+            {isLoading ? "Saving..." : "Save"}
           </Button>
+          {successMessage && <p style={{ color: "red" }}>{successMessage}</p>}
         </div>
       )}
     </div>

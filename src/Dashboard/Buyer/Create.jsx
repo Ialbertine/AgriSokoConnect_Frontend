@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const Create = () => {
-  const navigate = useNavigate();
+  const { stockItemId, stockItemName } = useParams();
+  // const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
-  const [quality, setQuality] = useState("");
   const [unit, setUnit] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [shippingAddress, setShippingAddress] = useState("");
@@ -24,11 +24,6 @@ const Create = () => {
       setErrorMessage("Please enter a valid quantity (positive integer).");
     }
 
-    if (quality.trim() === "") {
-      isValid = false;
-      setErrorMessage("Please enter the product quality.");
-    }
-
     if (phoneNumber.trim() === "") {
       isValid = false;
       setErrorMessage("Please enter your phone number.");
@@ -44,22 +39,33 @@ const Create = () => {
       setErrorMessage("Please select a unit.");
     }
 
-    //  this next line says if validation is successful, create the order
+    // If validation is successful, create the order
     if (isValid) {
       try {
+        const token = localStorage.getItem("token");
         const response = await axios.post(
           "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/create",
           {
+            selectedStockItems: [
+              {
+                NameOfProduct: stockItemName,
+              },
+            ],
             quantity,
-            quality,
             phoneNumber,
             shippingAddress,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
-       
         setSuccessMessage("Order created successfully!");
-        navigate("/payment"); 
+        // setTimeout(() => {
+        //   navigate("/dashboard/buyer/allorders");
+        // }, 2000);
       } catch (error) {
         console.error("Error creating order:", error);
         setErrorMessage("Failed to create order. Please try again.");
@@ -117,24 +123,6 @@ const Create = () => {
 
         <div className="mb-4">
           <label
-            htmlFor="quality"
-            className="block text-gray-700 font-bold mb-1"
-          >
-            Quality
-          </label>
-          <input
-            type="text"
-            id="quality"
-            name="quality"
-            value={quality}
-            onChange={(e) => setQuality(e.target.value)}
-            className="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-1 focus:ring-black"
-            required
-          />
-        </div>
-
-        <div className="mb-4">
-          <label
             htmlFor="phoneNumber"
             className="block text-gray-700 font-bold mb-1"
           >
@@ -146,7 +134,7 @@ const Create = () => {
             name="phoneNumber"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            className="shadow appearance-none border rounded w-full  py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-1 focus:ring-black"
+            className="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-1 focus:ring-black"
             required
           />
         </div>
@@ -175,7 +163,7 @@ const Create = () => {
             Proceed for Payment
           </button>
 
-          <Link to="/">
+          <Link to="/dashboard/buyer">
             <button
               type="button"
               className="bg-green-900 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:ring-1 focus:ring-offset-2"

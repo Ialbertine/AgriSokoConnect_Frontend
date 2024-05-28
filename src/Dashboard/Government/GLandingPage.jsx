@@ -46,7 +46,7 @@ const GLandingPage = () => {
     <div>
       <div className="relative">
         <img
-          src="/AboutUs.png" 
+          src="/AboutUs.png"
           alt="Agri-Connect Banner"
           className="h-[20vh] w-[100%] object-cover"
         />
@@ -81,11 +81,13 @@ const GLandingPage = () => {
                     key={item._id}
                     className="border p-4 rounded shadow mb-4"
                   >
-                    <img
-                      src={item.image}
-                      alt={item.NameOfProduct}
-                      className="w-32 h-32 object-cover mb-4"
-                    />
+                    <div className="flex justify-center">
+                      <img
+                        src={item.image}
+                        alt={item.NameOfProduct}
+                        className="w-[75%] h-[10rem] object-cover mb-4"
+                      />
+                    </div>
                     <span className="text-xl font-medium">
                       Product Name: {item.NameOfProduct}
                     </span>
