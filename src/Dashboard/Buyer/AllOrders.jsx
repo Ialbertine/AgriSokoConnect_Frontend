@@ -13,6 +13,7 @@ const AllOrder = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [orderData, setOrderData] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     fetchOrders();
@@ -85,20 +86,19 @@ const AllOrder = () => {
           body: JSON.stringify(editedOrder),
         }
       );
-      if (!response.ok) {
-        throw new Error("Failed to update order");
+      if (response.ok) {
+        setSuccessMessage("Profile updated successfully");
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 20000);
+      } else {
+        const errorMessage = await response.text(); 
+        console.error("Failed to update profile:", errorMessage);
       }
-      const updatedOrder = await response.json();
-      setOrderData((prevOrders) =>
-        prevOrders.map((order) =>
-          order._id === editingOrderId ? updatedOrder : order
-        )
-      );
-      setEditingOrderId(null);
-      setEditedOrder({});
     } catch (error) {
-      console.error("Error updating order:", error);
-      setError(error.message);
+      console.error("Error updating profile:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -190,9 +190,9 @@ const AllOrder = () => {
                     <EditIcon color="primary" />
                   </IconButton>
                   <Link to="/dashboard/buyer/view">
-                  <IconButton>
-                    <VisibilityIcon color="primary" />
-                  </IconButton>
+                    <IconButton>
+                      <VisibilityIcon color="primary" />
+                    </IconButton>
                   </Link>
                 </div>
               </CardContent>
@@ -246,10 +246,19 @@ const AllOrder = () => {
             variant="contained"
             color="primary"
             onClick={handleSaveEdit}
-            style={{ paddingLeft: 20, paddingRight: 20, paddingBottom: 10, paddingTop: 10, marginTop: 18, backgroundColor: "green" }}
+            style={{
+              paddingLeft: 20,
+              paddingRight: 20,
+              paddingBottom: 10,
+              paddingTop: 10,
+              marginTop: 18,
+              backgroundColor: "green",
+            }}
+            disabled={isLoading}
           >
-            Save
+            {isLoading ? "Saving..." : "Save"}
           </Button>
+          {successMessage && <p style={{ color: "red" }}>{successMessage}</p>}
         </div>
       )}
     </div>
