@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { PieChart, Pie, Cell } from 'recharts';
+import { VscLoading } from "react-icons/vsc";
 
 const FirstPage = () => {
 
@@ -234,7 +235,20 @@ const FirstPage = () => {
 
 
     if (loading) {
-        return <div>Loading...</div>
+        return (
+            <>
+                <div className='relative'>
+                    <img src='../harvest5.jpg' className='h-[30vh] w-full object-cover'></img>
+                    <div className='absolute lg:top-16 md:top-24 sm:top-24 lg:left-[72vh] md:left-[42vh] sm:left-[8vh] text-white'>
+                        <p className='text-5xl'><b>Admin Dashboard</b></p>
+                    </div>
+                </div>
+                <div className='pt-20 flex justify-center gap-5 text-xl h-[80vh] text-black font-semibold'>
+                    <VscLoading className='animate-spin' />
+                    <p>Loading</p>
+                </div>
+            </>
+        )
     };
 
     if (error) {
@@ -411,6 +425,9 @@ const FirstPage = () => {
                         </div>
                     </div>
                 </div>
+
+                {/* RECENT ORDERS PLACED  */}
+                
                 <div className='flex gap-10 mt-10 px-5'>
                     <div className='bg-white px-4 pt-3 pb-4 rounded-sm border border-gray-200 flex-1 p-5'>
                         <strong>Reccent order</strong>

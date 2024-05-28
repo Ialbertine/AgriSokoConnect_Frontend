@@ -127,9 +127,35 @@ const LandingPage = () => {
                                 </BarChart>
                             </div>
                         </div>
-                        <div className='mt-3 bg-[#f2f2f2]'>
-                            <strong>Operations</strong>
-                            {/* <table></table> */}
+                        <div className='p-5 mt-3 flex flex-col gap-5 bg-[#f2f2f2]'>
+                            <strong>Latest news</strong>
+                            <div className='pt-3 flex flex-col gap-3 border-t-2'>
+                                <p className=' font-thin'>May 28,2024</p>
+                                <Link to='https://x.com/RwandaAgri/status/1795405130373931055'>
+                                    Uyu munsi Umunyamabanga Uhoraho <span className='text-blue-600'>
+                                        @olivikam  </span>
+                                    n’Umuyobozi w'Akarere ka <span className='text-blue-600'>
+                                        @MusanzeDistrict </span> bifatanyije n’abahinzi b’ibirayi muri <span className='text-blue-600'>
+                                        @MusanzeDistrict </span>
+                                    mu gutangiza gahunda y’ubwishingizi bw’ibihingwa bukomatanyijwe n’imbuto nziza y’ibirayi ku bufatanye bwa
+                                    <span className='text-blue-600'> @spf_ikigega </span> na <span className='text-blue-600'> @bkinsuranceltd </span>
+                                </Link>
+                                <Link to='https://x.com/RwandaAgri/status/1795405130373931055'><img src='../FarmerNews.jpg' className='w-[40vh] rounded-lg'></img></Link>
+                            </div>
+                            <div className='pt-3 flex flex-col gap-3 border-t-2'>
+                                <p className=' font-thin'>May 28, 2024</p>
+                                <Link to='https://x.com/IFPRIRwanda/status/1795380603963244960'>
+                                    <span className='text-blue-600'>@IFPRIRwanda </span> and <span className='text-blue-600'>
+                                    @GAINalliance </span>
+                                    in partnership with <span className='text-blue-600'>
+                                    @RwandaAgri </span>
+                                    hosted a workshop on monitoring #foodsystems for healthy and sustainable #diets using   #research findings on smallholder commercial farming
+
+                                    More on this event and research findings👇 <Link to='https://rwanda.ifpri.info/2024/05/24/stakeholder-workshop-on-monitoring-food-systems-for-healthy-and-sustainable-diets-recent-research-findings-on-smallholder-commercial-farming-in-rwanda-may-16-17-2024/'>
+                                        <span className='text-blue-600'>  https://bit.ly/3wU3jCw</span></Link>
+                                </Link>
+                                <Link to='https://x.com/IFPRIRwanda/status/1795380603963244960'><img src='../FarmerNews2.png' className='w-[80vh] rounded-lg'></img></Link>
+                            </div>
                         </div>
                     </div>
                     <div className='w-[39h] flex flex-col-reverse'>
@@ -156,7 +182,7 @@ const LandingPage = () => {
                                 </form>
                             </div>
                         </div>
-                    
+
                         <div className='bg-[#f2f2f2] h-[21vh] p-4'>
                             <strong className='px-4'>Transactions</strong>
                             <div className='flex mt-2 text-[#B3C860] justify-center text-center'>

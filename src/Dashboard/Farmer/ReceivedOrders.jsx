@@ -1,189 +1,153 @@
 import React, { useState, useEffect } from "react";
-import { DataGrid } from "@mui/x-data-grid";
-import { Button, TextField, IconButton } from "@mui/material";
-import { IoMdCloseCircleOutline } from "react-icons/io";
-import { IoCheckmarkDoneOutline } from "react-icons/io5";
-import { BiArrowToTop } from "react-icons/bi";
+import { VscLoading } from "react-icons/vsc";
 
 const ReceivedOrders = () => {
-
     const [searchQuery, setSearchQuery] = useState("");
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [orders, setOrders] = useState([
-        {
-            id: 1,
-            productName: "Apple (Red Delicious)",
-            quantity: 5,
-            quality: "Organic",
-            phoneNumber: "+250788773366",
-            shippingAddress: "Kigali, KN 4 Ave, 74",
-        },
-        {
-            id: 2,
-            productName: "Mango",
-            quantity: 3,
-            quality: "Fresh",
-            phoneNumber: "+250738992211",
-            shippingAddress: "Kigali City Tower, KN 2 St.",
-        },
-    ]);
+    const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    //    Fetching 
+    useEffect(() => {
+        const fetchOrders = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    throw new Error('No token found, please log in');
+                }
 
+                const response = await fetch('https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/stock/getAllOrders', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
 
-    // function to handle the search
+                if (!response.ok) {
+                    // throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log('Fetched data:', data);
+                setOrders(data);
+            } catch (error) {
+                // console.error('Error fetching orders:', error);
+                // setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchOrders();
+    }, []);
+
     const handleSearch = (event) => {
         setSearchQuery(event.target.value);
-    }
-    // function to handle the delete for the order
-    const handleDelete = (id) => {
-
     };
 
-    const columns = [
-        { field: "id", headerName: "ID", width: 70 },
-        { field: "productName", headerName: "Product Name", width: 150 },
-        { field: "quantity", headerName: "Quantity", width: 100 },
-        { field: "quality", headerName: "Quality", width: 120 },
-        { field: "phoneNumber", headerName: "Phone Number", width: 150 },
-        { field: "shippingAddress", headerName: "Shipping Address", width: 200 },
-        {
-            field: "actions",
-            headerName: "Actions",
-            width: 100,
-            renderCell: (params) => (
-                <>
-                    <IconButton onClick={() => handleDelete(params.row.id)}>
-                        <IoMdCloseCircleOutline className="text-orange-700" />
-                    </IconButton>
-                </>
-            ),
-        },
-    ];
-
-    const DeliveredOrders = [
-        { field: "id", headerName: "ID", width: 70 },
-        { field: "productName", headerName: "Product Name", width: 150 },
-        { field: "quantity", headerName: "Quantity", width: 100 },
-        { field: "quality", headerName: "Quality", width: 120 },
-        { field: "phoneNumber", headerName: "Phone Number", width: 150 },
-        { field: "shippingAddress", headerName: "Shipping Address", width: 200 },
-        {
-            field: "actions",
-            headerName: "Status",
-            width: 100,
-            renderCell: (params) => (
-                <>
-                    <IconButton onClick={() => handleDelete(params.row.id)}>
-                        <IoCheckmarkDoneOutline className="text-blue-400" />
-                    </IconButton>
-                </>
-            ),
-        },
-        {
-            field: "restore",
-            headerName: "Restore",
-            width: 100,
-            renderCell: (params) => (
-                <>
-                    <IconButton onClick={() => handleDelete(params.row.id)}>
-                        <BiArrowToTop className="" />
-                    </IconButton>
-                </>
-            ),
-        },
-    ];
-
-    const filteredOrders = orders.filter((order) =>
-        order.productName.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    const handlePageChange = (newPage) => {
-        setPage(newPage);
-    };
-    const handleRowsPerPageChange = (newRowsPerPage) => {
-        setRowsPerPage(newRowsPerPage);
-    };
-
-
-
-    return (
-        <div className='p-5 bg-[#f2f2f2] flex flex-col gap-10'>
-            <div className="">
+    if (loading) {
+        return (
+            <div className='p-10 flex flex-col gap-5 bg-[#f2f2f2]'>
                 <div className="flex flex-col gap-5">
                     <strong className='text-xl flex justify-center'>Received Orders</strong>
                     <strong className="pb-5">New orders</strong>
                 </div>
-                <div
-                    style={{
-                        height: 400,
-                        width: "85%",
-                        display: "flex",
-                        flexDirection: "column",
-                        margin: "16 0 0 20",
-                        backgroundColor: "white",
-                        padding:"40px",
-                    }}
-                >
-                    <div
-                        style={{
-                            display: "flex",
-                            justifyContent: "flex-start",
-                            alignItems: "center",
-                            marginBottom: 16,
-                            width: "60%",
-                        }}
-                    >
-                        <TextField
-                            label="Search Orders"
-                            variant="outlined"
-                            value={searchQuery}
-                            onChange={handleSearch}
-                            style={{ width: 700 }}
-                        />
-                       
-                    </div>
-                    <DataGrid
-                        rows={filteredOrders.slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
-                        )}
-                        columns={columns}
-                        pageSize={rowsPerPage}
-                        rowsPerPageOptions={[5, 10, 25]}
-                        onPageSizeChange={handleRowsPerPageChange}
-                        rowCount={filteredOrders.length}
-                        onPageChange={handlePageChange}
-                        paginationMode="server" // Simulate server-side pagination (optional)
-                    />
+                <div className='pt-20 flex justify-center gap-5 text-xl h-[80vh] text-black font-semibold'>
+                    <VscLoading className='animate-spin' />
+                    <p>Loading</p>
                 </div>
             </div>
+        );
+    }
 
-            {/* DELIVERED ORDER TABLE */}
-            <strong className="">Completed orders</strong>
-            <div className=" bg-white w-[90%]">
-                
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "flex-start",
-                        alignItems: "center",
-                        width: '100%',
-                        padding:"40px",
-                    }}
-                >
-                    <DataGrid
-                        rows={filteredOrders.slice(
-                            page * rowsPerPage,
-                            page * rowsPerPage + rowsPerPage
-                        )}
-                        columns={DeliveredOrders}
-                    />
+    let filteredOrders = orders.filter(order =>
+        order.customer.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        order.selectedStockItems.some(item =>
+            item.NameOfProduct.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    );
+
+    console.log(filteredOrders);
+    return (
+        <div className='p-5 bg-[#f2f2f2] flex flex-col gap-10'>
+            <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-5">
+                    <strong className='text-xl flex justify-center'>Received Orders</strong>
+                    <strong className="pb-5">New orders</strong>
+                </div>
+                <input
+                    type="text"
+                    placeholder="Search orders"
+                    value={searchQuery}
+                    onChange={handleSearch}
+                    className="py-2 px-3 border w-[50%] border-gray-300 rounded"
+                />
+                <div className="bg-white p-4">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th className="py-2">Order ID</th>
+                                <th className="px-4 py-2">Customer Name</th>
+                                <th className="px-4 py-2">Phone Number</th>
+                                <th className="px-4 py-2">Product</th>
+                                <th className="px-4 py-2">Quantity</th>
+                                <th className="px-4 py-2">Total Price</th>
+                                <th className="px-4 py-2">Shipping address</th>
+                                <th className="px-4 py-2">status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredOrders.map(order => (
+                                <React.Fragment key={order._id}>
+                                    <tr>
+                                        <td className=" py-2">{order._id}</td>
+                                        <td className=" px-4 py-2">{order.customer.fullName}</td>
+                                        <td className=" px-4 py-2">{order.phoneNumber}</td>
+                                        <td className=" px-4 py-2">{order.selectedStockItems[0].NameOfProduct}</td>
+                                        <td className=" px-4 py-2">{order.selectedStockItems[0].quantity}</td>
+                                        <td className=" px-4 py-2">{order.selectedStockItems[0].itemTotalPrice}</td>
+                                        <td className=" px-4 py-2">{order.shippingAddress}</td>
+                                        <td className=" px-4 py-2">{order.status}</td>
+                                    </tr>
+                                    {order.selectedStockItems.slice(1).map(item => (
+                                        <tr key={item._id}>
+                                            <td className=" px-4 py-2">{item.NameOfProduct}</td>
+                                            <td className=" px-4 py-2">{item.quantity}</td>
+                                            <td className=" px-4 py-2">{item.itemTotalPrice}</td>
+                                        </tr>
+                                    ))}
+                                </React.Fragment>
+                            ))}
+                        </tbody>
+                    </table>
+
+                </div>
+
+                {/* DERIVED ORDERS  */}
+
+                <div className="pt-5">
+                    <strong>Derived orders</strong>
+                    <div className="bg-white px-10 py-5 mt-5">
+                        <table>
+                            <thead>
+                                {/* <tr>
+                                    <th className="py-2">Order ID</th>
+                                    <th className="px-4 py-2">Customer Name</th>
+                                    <th className="px-4 py-2">Phone Number</th>
+                                    <th className="px-4 py-2">Product</th>
+                                    <th className="px-4 py-2">Quantity</th>
+                                    <th className="px-4 py-2">Total Price</th>
+                                    <th className="px-4 py-2">Shipping address</th>
+                                    <th className="px-4 py-2">status</th>
+                                </tr> */}
+                                <tr>No derived orders</tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default ReceivedOrders
+export default ReceivedOrders;

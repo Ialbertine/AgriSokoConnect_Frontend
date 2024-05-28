@@ -57,10 +57,21 @@ const Stock = () => {
 
   if (loading) {
     return (
-      <div className='pt-20 flex justify-center items-center gap-5 text-xl h-[80vh] text-black font-semibold'>
-        <VscLoading className='animate-spin' />
-        <p>Loading...</p>
-      </div>
+      <>
+        <div className='flex flex-col px-10'>
+          <div className='py-10 flex justify-center gap-5'>
+            <strong>My Stock</strong>
+          </div>
+          <div>
+            <p className='text-xl'>This is what you have in stock:</p>
+          </div>
+          <div className='px-5 flex gap-5'></div>
+          <div className='pt-20 flex justify-center gap-5 text-xl h-[80vh] text-black font-semibold'>
+            <VscLoading className='animate-spin' />
+            <p>Loading</p>
+          </div>
+        </div>
+      </>
     );
   }
 
@@ -89,53 +100,23 @@ const Stock = () => {
       <div>
         <p className='text-xl'>This is what you have in stock:</p>
       </div>
-      <div className='px-5 flex gap-5'>
-         <ul>
+      <div className='px-5 pt-3 flex gap-5'>
+        <ul>
           {stock.map((item) => (
             <li key={item._id} className='border-b flex gap-5 items-center border-gray-200 py-4'>
-                <strong className='pr-5 w-[15vh]'>{item.NameOfProduct}</strong>
-               {/* <img src={item.image} alt={item.NameOfProduct} className='w-32 h-32 object-cover rounded-sm' />  */}
+              <strong className='pr-5 w-[15vh]'>{item.NameOfProduct}</strong>
+              {/* <img src={item.image} alt={item.NameOfProduct} className='w-32 h-32 object-cover rounded-sm' />  */}
               <div className='w-[30vh]'>{item.typeOfProduct}</div>
               <div className='w-[35vh]'>{item.description}</div>
               <div className='w-[15vh]'>{item.quantity} tons</div>
               <div className='w-[15vh]'>{item.pricePerTon} RWF</div>
-               {/* <div>Stock worth: {item.totalPrice}</div>  */}
-              <div>
+              {/* <div>Stock worth: {item.totalPrice}</div>  */}
+              {/* <div>
                 <button className=' text-white rounded-lg px-3 hover:bg-[#269553] bg-[#2d7a4a] py-1 text-lg w-[18vh] mt-3'>Update stock</button>
-              </div>
+              </div> */}
             </li>
           ))}
-        </ul> 
-
-        {/* <table className=' items-start table-column'>
-          <thead>
-            <tr className=''>
-              <th >
-                Type
-              </th>
-              <th className=''>
-                Description
-              </th>
-              <th className=''>
-                Quantity
-              </th>
-              <th className=''>
-                Price per ton
-              </th>
-            </tr>
-          </thead>
-          {stock.map((item) => (
-            <tr key={item._id}>
-              <td>{item.typeOfProduct}</td>
-              <td>{item.description}</td>
-              <td>{item.quantity}</td>
-              <td>{item.pricePerTon}</td>
-            </tr>
-          ))}
-
-
-
-        </table> */}
+        </ul>
       </div>
     </div>
   );

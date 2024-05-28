@@ -94,6 +94,7 @@ const Farmers = () => {
                               answer={' Specification: ' + product.typeOfProduct}
                               answer1={' Quantity: ' + product.quantity + ' ton'}
                               answer2={' Price per ton: ' + product.pricePerTon + ' RWF'}
+                              answer3={' Description: ' + product.description}
                             />
                           </li>
                         </div>
