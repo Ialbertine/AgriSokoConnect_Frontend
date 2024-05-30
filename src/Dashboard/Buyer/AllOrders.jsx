@@ -66,7 +66,7 @@ const AllOrder = () => {
         throw new Error("Authorization token not found");
       }
       const response = await axios.delete(
-        `https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/delete/${id}`,
+        `https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/delete/{id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -149,9 +149,7 @@ const AllOrder = () => {
     }
   };
 
-  const handleSearch = (event) => {
-    setSearchQuery(event.target.value);
-  };
+ 
   const handlePayment = async () => {
     const token = localStorage.getItem("token");
     console.log("Token:", token);
@@ -176,7 +174,7 @@ const AllOrder = () => {
       // Redirect to payment link if needed
     } catch (error) {
       console.error("Error initiating payment:", error);
-      // Handle errors
+      
     }
   };
 
@@ -187,6 +185,11 @@ const AllOrder = () => {
           order.customer.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
+
+
+  const handleSearch = (event) => {
+    setSearchQuery(event.target.value);
+  };
 
   return (
     <div
@@ -219,7 +222,7 @@ const AllOrder = () => {
       </div>
       <Grid container spacing={2}>
         {filteredOrders.map((order) => (
-          <Grid item xs={12} sm={6} md={4} key={order._id}>
+          <Grid item xs={12} sm={15} md={4} key={order._id}>
             <Card>
               <CardContent>
                 {order.selectedStockItems &&
