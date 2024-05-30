@@ -63,13 +63,13 @@ const BLandingPage = () => {
           onChange={handleSearchChange}
           className="px-4 py-2 border rounded-md"
         />
-        <h1 className="text-xl font-bold my-3">
-          Choose what you can order from these
+        <h1 className="text-xl font-medium my-3">
+          Choose what you can order from these and click on it to create your Order
         </h1>
       </div>
       {filteredStockData.length > 0 ? (
         <div className="stock-container px-4 py-8 bg-white rounded-md shadow-md mt-8">
-          <h2 className="text-2xl font-semibold mb-4">Available Stock</h2>
+          <h2 className="text-3xl font-bold mb-4 text-green-800">Available Stock</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredStockData.map((stockItem, index) => (
               <Link

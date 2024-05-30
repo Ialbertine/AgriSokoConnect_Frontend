@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, Typography, TextField, IconButton, Button, Grid} from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  TextField,
+  IconButton,
+  Grid,
+  Button,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Link } from "react-router-dom";
+import { FaAmazonPay } from "react-icons/fa";
 import axios from "axios";
 
 const AllOrder = () => {
+
   const [searchQuery, setSearchQuery] = useState("");
   const [editingOrderId, setEditingOrderId] = useState(null);
   const [editedOrder, setEditedOrder] = useState({});
@@ -50,14 +61,23 @@ const AllOrder = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Authorization token not found");
+      }
+      const response = await axios.delete(
         `https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/delete/${id}`,
         {
-          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
-      if (!response.ok) {
-        throw new Error("Failed to delete order");
+      if (response.status === 200) {
+       setSuccessMessage("Order deleted successfully");
+       setTimeout(() => {
+         setSuccessMessage("");
+       }, 20000);
       }
       setOrderData((prevOrders) =>
         prevOrders.filter((order) => order._id !== id)
@@ -75,26 +95,37 @@ const AllOrder = () => {
   };
 
   const handleSaveEdit = async () => {
+    setIsLoading(true);
     try {
-      const response = await fetch(
+      const token = localStorage.getItem("token");
+      const updates = {
+        selectedStockItems: editedOrder.selectedStockItems.map((item) => ({
+          NameOfProduct: item.NameOfProduct,
+          quantity: item.quantity,
+        })),
+        phoneNumber: editedOrder.phoneNumber,
+        shippingAddress: editedOrder.shippingAddress,
+      };
+      const response = await axios(
         `https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/update/${editingOrderId}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+
           },
-          body: JSON.stringify(editedOrder),
         }
       );
-      if (response.ok) {
-        setSuccessMessage("Profile updated successfully");
-        setTimeout(() => {
-          setSuccessMessage("");
-        }, 20000);
-      } else {
-        const errorMessage = await response.text(); 
-        console.error("Failed to update profile:", errorMessage);
-      }
+     if (response.status === 200) {
+       setSuccessMessage("Order updated successfully");
+       setTimeout(() => {
+         setSuccessMessage("");
+       }, 20000);
+     } else {
+       const errorMessage = await response.text();
+       console.error("Failed to update profile:", errorMessage);
+     }
     } catch (error) {
       console.error("Error updating profile:", error);
     } finally {
@@ -103,14 +134,50 @@ const AllOrder = () => {
   };
 
   const handleEditOrderData = (field, value) => {
-    setEditedOrder((prevEditedOrder) => ({
-      ...prevEditedOrder,
-      [field]: value,
-    }));
+    if (field === "quantity") {
+      setEditedOrder((prevEditedOrder) => ({
+        ...prevEditedOrder,
+        selectedStockItems: prevEditedOrder.selectedStockItems.map(
+          (item, index) => (index === 0 ? { ...item, quantity: value } : item)
+        ),
+      }));
+    } else {
+      setEditedOrder((prevEditedOrder) => ({
+        ...prevEditedOrder,
+        [field]: value,
+      }));
+    }
   };
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
+  };
+  const handlePayment = async () => {
+    const token = localStorage.getItem("token");
+    console.log("Token:", token);
+    if (!token) {
+      throw new Error("Authorization token not found");
+    }
+    try {
+      const response = await axios.get(
+        "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/pay/momo",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Payment initiated:");
+
+      console.log("Payment initiated:", response.data.data.data.link);
+      if (response.status == 200) {
+        window.location.href = `${response.data.data.data.link}`;
+      }
+      // Redirect to payment link if needed
+    } catch (error) {
+      console.error("Error initiating payment:", error);
+      // Handle errors
+    }
   };
 
   const filteredOrders = Array.isArray(orderData)
@@ -158,11 +225,23 @@ const AllOrder = () => {
                 {order.selectedStockItems &&
                   order.selectedStockItems.map((item, index) => (
                     <div key={index}>
-                      <Typography variant="h6">
-                        Product Name: {item.NameOfProduct}
+                      <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                        Product Name:{" "}
+                        <Box
+                          component="span"
+                          sx={{ fontWeight: "bold", color: "green" }}
+                        >
+                          {item.NameOfProduct}
+                        </Box>
                       </Typography>
-                      <Typography variant="h6">
-                        Quality of Product: {item.typeOfProduct}
+                      <Typography variant="body1">
+                        Quality:{" "}
+                        <Box
+                          component="span"
+                          sx={{ fontWeight: "bold", color: "green" }}
+                        >
+                          {item.typeOfProduct}
+                        </Box>
                       </Typography>
                       <Typography variant="body1">
                         Quantity: {item.quantity} Ton
@@ -183,6 +262,9 @@ const AllOrder = () => {
                   Created At: {new Date(order.createdAt).toLocaleString()}
                 </Typography>
                 <div>
+                  <IconButton onClick={handlePayment}>
+                    <FaAmazonPay style={{ fontSize: "24px", color: "black" }} />
+                  </IconButton>
                   <IconButton onClick={() => handleDelete(order._id)}>
                     <DeleteIcon color="error" />
                   </IconButton>
@@ -206,7 +288,7 @@ const AllOrder = () => {
             Edit Order
           </h3>
           <TextField
-            label="Total Items"
+            label="Total Quantity"
             variant="outlined"
             value={editedOrder.totalItems || ""}
             onChange={(e) => handleEditOrderData("totalItems", e.target.value)}
@@ -228,20 +310,6 @@ const AllOrder = () => {
             }
             style={{ marginRight: 16, marginTop: 16 }}
           />
-          <TextField
-            label="Status"
-            variant="outlined"
-            value={editedOrder.status || ""}
-            onChange={(e) => handleEditOrderData("status", e.target.value)}
-            style={{ marginRight: 16, marginTop: 16 }}
-          />
-          <TextField
-            label="Total Amount"
-            variant="outlined"
-            value={editedOrder.totalAmount || ""}
-            onChange={(e) => handleEditOrderData("totalAmount", e.target.value)}
-            style={{ marginRight: 16, marginTop: 16 }}
-          />
           <Button
             variant="contained"
             color="primary"
@@ -256,7 +324,7 @@ const AllOrder = () => {
             }}
             disabled={isLoading}
           >
-            {isLoading ? "Saving..." : "Save"}
+            {isLoading ? "Saving..." : "Save Changes"}
           </Button>
           {successMessage && <p style={{ color: "red" }}>{successMessage}</p>}
         </div>
