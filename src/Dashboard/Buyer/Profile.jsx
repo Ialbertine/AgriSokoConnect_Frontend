@@ -144,21 +144,6 @@ const Profile = () => {
               required
             />
           </div>
-
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-lg font-medium mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={userData.email}
-              disabled
-              className="w-full border border-gray-300 px-3 py-3 rounded"
-            />
-          </div>
-
           <div className="flex gap-2">
             <div className="mb-4 w-full">
               <label

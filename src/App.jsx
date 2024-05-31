@@ -33,7 +33,7 @@ import Create from "./Dashboard/Buyer/Create";
 import ViewOrder from "./Dashboard/Buyer/ViewOrder";
 import Support from "./Dashboard/Buyer/Support";
 import BuyerProfile from "./Dashboard/Buyer/Profile";
-import Message from "./Dashboard/Buyer/Message";
+import News from "./Dashboard/Buyer/News";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -103,8 +103,8 @@ const App = () => {
                 element={<Create />}
               />
               <Route path="create" element={<Create />} />
-              <Route path="message" element={<Message />} />
               <Route path="profile" element={<BuyerProfile />} />
+              <Route path="news" element={<News />} />
               <Route path="view" element={<ViewOrder />} />
               <Route path="support" element={<Support />} />
             </Route>
