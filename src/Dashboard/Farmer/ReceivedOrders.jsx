@@ -123,7 +123,7 @@ const ReceivedOrders = () => {
                 {/* DERIVED ORDERS  */}
 
                 <div className="pt-5">
-                    <strong>Derived orders</strong>
+                    <strong>Paid orders</strong>
                     <div className="bg-white px-10 py-5 mt-5">
                         <table>
                             <thead>
@@ -137,7 +137,7 @@ const ReceivedOrders = () => {
                                     <th className="px-4 py-2">Shipping address</th>
                                     <th className="px-4 py-2">status</th>
                                 </tr> */}
-                                <tr>No derived orders</tr>
+                                <tr>No paid orders</tr>
                             </thead>
                             <tbody>
 
