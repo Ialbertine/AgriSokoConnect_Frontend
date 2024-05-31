@@ -17,7 +17,6 @@ import { FaAmazonPay } from "react-icons/fa";
 import axios from "axios";
 
 const AllOrder = () => {
-
   const [searchQuery, setSearchQuery] = useState("");
   const [editingOrderId, setEditingOrderId] = useState(null);
   const [editedOrder, setEditedOrder] = useState({});
@@ -29,6 +28,15 @@ const AllOrder = () => {
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  useEffect(() => {
+    if (successMessage) {
+      setTimeout(() => {
+        setSuccessMessage("");
+        window.location.reload();
+      }, 2000); // Adjust the time as needed
+    }
+  }, [successMessage]);
 
   const fetchOrders = async () => {
     setIsLoading(true);
@@ -74,10 +82,7 @@ const AllOrder = () => {
         }
       );
       if (response.status === 200) {
-       setSuccessMessage("Order deleted successfully");
-       setTimeout(() => {
-         setSuccessMessage("");
-       }, 20000);
+        setSuccessMessage("Order deleted successfully");
       }
       setOrderData((prevOrders) =>
         prevOrders.filter((order) => order._id !== id)
@@ -101,31 +106,31 @@ const AllOrder = () => {
       const updates = {
         selectedStockItems: editedOrder.selectedStockItems.map((item) => ({
           NameOfProduct: item.NameOfProduct,
+          typeOfProduct: item.typeOfProduct,
           quantity: item.quantity,
         })),
         phoneNumber: editedOrder.phoneNumber,
         shippingAddress: editedOrder.shippingAddress,
       };
+
       const response = await axios(
         `https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/update/${editingOrderId}`,
+
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-
+            Authorization: `Bearer ${token}`,
           },
+          data: JSON.stringify(updates),
         }
       );
-     if (response.status === 200) {
-       setSuccessMessage("Order updated successfully");
-       setTimeout(() => {
-         setSuccessMessage("");
-       }, 20000);
-     } else {
-       const errorMessage = await response.text();
-       console.error("Failed to update profile:", errorMessage);
-     }
+      if (response.status === 200) {
+        setSuccessMessage("Order updated successfully");
+      } else {
+        const errorMessage = await response.text();
+        console.error("Failed to update profile:", errorMessage);
+      }
     } catch (error) {
       console.error("Error updating profile:", error);
     } finally {
@@ -149,7 +154,6 @@ const AllOrder = () => {
     }
   };
 
- 
   const handlePayment = async () => {
     const token = localStorage.getItem("token");
     console.log("Token:", token);
@@ -174,7 +178,6 @@ const AllOrder = () => {
       // Redirect to payment link if needed
     } catch (error) {
       console.error("Error initiating payment:", error);
-      
     }
   };
 
@@ -185,7 +188,6 @@ const AllOrder = () => {
           order.customer.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
-
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
@@ -286,17 +288,24 @@ const AllOrder = () => {
         ))}
       </Grid>
       {editingOrderId && (
-        <div style={{ marginTop: 16 }}>
+        <div style={{ marginTop: 16, marginBottom: 25 }}>
           <h3 className="text-2xl mb-3 font-medium text-green-600">
             Edit Order
           </h3>
-          <TextField
-            label="Total Quantity"
-            variant="outlined"
-            value={editedOrder.totalItems || ""}
-            onChange={(e) => handleEditOrderData("totalItems", e.target.value)}
-            style={{ marginRight: 16, marginTop: 16 }}
-          />
+          {editedOrder.selectedStockItems &&
+            editedOrder.selectedStockItems.map((item, index) => (
+              <TextField
+                key={index}
+                label={`Quantity for ${item.NameOfProduct}`}
+                variant="outlined"
+                value={item.quantity || ""}
+                onChange={(e) =>
+                  handleEditOrderData("quantity", e.target.value, index)
+                }
+                style={{ marginRight: 16, marginTop: 16 }}
+              />
+            ))}
+
           <TextField
             label="Phone Number"
             variant="outlined"
