@@ -42,7 +42,7 @@ const SignIn = () => {
       const { role, token } = response.data;
       console.log(role);
 
-      // Store token and role in local storage
+      // Store token and role in local storage  
       localStorage.setItem("token", token);
       localStorage.setItem("userRole", role);
 
