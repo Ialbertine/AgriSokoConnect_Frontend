@@ -128,14 +128,6 @@ const Home = () => {
           </div>
         </div>
 
-        {/* NEWS */}
-
-        <div>
-          <div>
-            <p className='text-xl p-3'></p>
-          </div>
-        </div>
-
         {/* COOPERATIVES */}
 
         <div className='flex lg:flex-row md:flex-row sm:flex-col justify-evenly md:items-start sm:items-center lg:items-start py-10 border border-t-2'>
@@ -198,7 +190,35 @@ const Home = () => {
 
         </div>
 
-      </div>
+
+        {/* ADS */}
+
+        <div>
+          <div className=' gap-2 lg:px-40 md:px-20 sm:px-10 py-10 bg-[#6d8c54] text-white'>
+            <p className='pb-10 underline text-lg underline-offset-2 font-semibold animate-pulse'>ADVERTISMENT</p>
+            <div className='flex lg:flex-row md:flex-col sm:flex-col lg:items-center md:items-start sm:items-start lg:gap-0 md:gap-3 sm:gap-3'>
+              <div className='flex flex-col gap-3'>
+
+                <img src='ads.png' className='w-[16vh]'></img>
+                <p className='text-white'>visit us at <Link to='https://shorturl.at/MqZhv' className='text-yellow-200'>https://shorturl.at/MqZhv</Link ></p>
+                <p className='lg:w-[80%] sm:w-[100%]'> We are theThe global tomato processing industry
+                  On a global scale, the annual production of fresh tomatoes amounts to approximately 180
+                  million tonnes. In comparison, two times more potatoes
+                  and four times more rice are grown around the world (FAO, 2019). However, about
+                  a quarter of those 160 million tonnes are grown for the processing industry, which makes
+                  tomatoes the world’s leading vegetable for processing. Almost 39 million tonnes of tomatoes are processed every year
+                  in factories belonging to the greatest labels of the global food industry.
+                </p>
+              </div>
+              <div className='w-[80%]'>
+                <img src='ads2.gif'></img>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div >
     </>
   )
 }
