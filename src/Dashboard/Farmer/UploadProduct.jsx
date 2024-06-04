@@ -90,47 +90,50 @@ const UploadProduct = () => {
               <strong>Harvest information</strong>
               <input type='text' placeholder='Product name' value={uploads.NameOfProduct}
                 onChange={(e) => setUploads({ ...uploads, NameOfProduct: e.target.value })}
-                className='px-5 py-3 border-2 rounded-lg'>
+                className='px-5 py-3 border-2 rounded-lg' required>
               </input>
 
               <input type='text' placeholder="Type of product (ubwoko bw'igihingwa wahinze)" value={uploads.typeOfProduct}
                 onChange={(e) => setUploads({ ...uploads, typeOfProduct: e.target.value })}
-                className='px-5 py-3 border-2 rounded-lg'>
+                className='px-5 py-3 border-2 rounded-lg' required>
               </input>
 
               <input type='text' placeholder='Description' value={uploads.description}
                 onChange={(e) => setUploads({ ...uploads, description: e.target.value })}
-                className='px-5 py-3 border-2 rounded-lg'>
+                className='px-5 py-3 border-2 rounded-lg' required>
               </input>
 
               <input type='number' placeholder='Quantity' value={uploads.quantity}
                 onChange={(e) => setUploads({ ...uploads, quantity: e.target.value })}
-                className='px-5 py-3 border-2 rounded-lg'>
+                className='px-5 py-3 border-2 rounded-lg' required>
               </input>
 
               <input type='number' placeholder='Price per ton' value={uploads.pricePerTon}
                 onChange={(e) => setUploads({ ...uploads, pricePerTon: e.target.value })}
-                className='px-5 py-3 border-2 rounded-lg'>
+                className='px-5 py-3 border-2 rounded-lg' required>
               </input>
 
               <button className='text-white rounded-lg px-3 hover:bg-[#269553] bg-[#2d7a4a] p-1 py-2 text-lg w-[23vh]' type='submit' disabled={loading}>
                 {!loading && "Upload to stock"}
-                {loading && "Loading ..."}
+                {loading && "Uploading ..."}
               </button>
             </div>
-            <div className='flex flex-col gap-4'>
-              <strong>Harvest image</strong>
-
-              <LiaCameraRetroSolid className='text-4xl' />
-              <input
-                type='file'
-                name='file'
-                onChange={handleFileChange}
-              />
-            </div>
             <div>
-              {/* image preview */}
-              {image && <img src={URL.createObjectURL(image)} alt="Preview" width="100" />}
+              <div className='flex flex-col gap-4'>
+                <strong>Harvest image</strong>
+
+                <LiaCameraRetroSolid className='text-4xl' />
+                <input
+                  type='file'
+                  name='file'
+                  onChange={handleFileChange}
+                  required
+                />
+              </div>
+              <div className='pt-3'>
+                {/* image preview */}
+                {image && <img src={URL.createObjectURL(image)} alt="Preview" width="300" />}
+              </div>
             </div>
           </form>
         </div>

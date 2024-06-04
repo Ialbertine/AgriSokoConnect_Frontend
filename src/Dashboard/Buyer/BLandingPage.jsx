@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { VscLoading } from "react-icons/vsc";
 
 const BLandingPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState(null);
   const [fetch, setFetch] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -13,14 +15,15 @@ const BLandingPage = () => {
 
   const filteredStockData = Array.isArray(fetch)
     ? fetch.filter((stockItem) =>
-        stockItem.NameOfProduct.toLowerCase().includes(
-          searchQuery.toLowerCase()
-        )
+      stockItem.NameOfProduct.toLowerCase().includes(
+        searchQuery.toLowerCase()
       )
+    )
     : [];
 
   const handleFetch = async () => {
     let token = localStorage.getItem("token");
+    setLoading(true);
     try {
       const response = await axios({
         method: "GET",
@@ -34,12 +37,37 @@ const BLandingPage = () => {
     } catch (error) {
       console.log(error);
       setError("Failed to fetch stock data");
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     handleFetch();
   }, []);
+
+  if (loading) {
+    return (
+      <>
+        <div>
+          <div className="relative">
+            <img
+              src="../AboutUs.png"
+              alt="Agri-Connect Banner"
+              className="h-[20vh] w-[100%] object-cover"
+            />
+            <div className="absolute lg:top-10 md:top-24 sm:top-5 lg:left-[70vh] md:left-[42vh] sm:left-[8vh] text-[#cbcaca]">
+              <p className="text-4xl font-bold">Buyer Dashboard</p>
+            </div>
+          </div>
+          <div className='pt-20 flex justify-center gap-5 text-xl h-[80vh] text-black font-semibold'>
+            <VscLoading className='animate-spin' />
+            <p>Loading</p>
+          </div>
+        </div>
+      </>
+    )
+  }
 
   return (
     <div className="landing-page bg-gray-100">
@@ -74,9 +102,8 @@ const BLandingPage = () => {
             {filteredStockData.map((stockItem, index) => (
               <Link
                 key={index}
-                to={`/dashboard/buyer/create/${
-                  stockItem._id
-                }/${encodeURIComponent(stockItem.NameOfProduct.trim())}`}
+                to={`/dashboard/buyer/create/${stockItem._id
+                  }/${encodeURIComponent(stockItem.NameOfProduct.trim())}`}
                 className="bg-white rounded-lg shadow-lg p-4 flex flex-col items-center no-underline"
               >
                 <img
