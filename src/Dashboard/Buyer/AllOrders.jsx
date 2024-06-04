@@ -198,7 +198,7 @@ const AllOrder = () => {
     }
   };
   
-  // Filter orders based on product name type or shipping address on search query
+  // Filter orders based on product name, type or shipping address on search query
 
  const filteredOrders = Array.isArray(orderData)
    ? orderData.filter(
