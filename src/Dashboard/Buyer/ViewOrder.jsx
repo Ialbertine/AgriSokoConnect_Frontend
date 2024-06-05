@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const ViewOrder = ({ orderId }) => {
+const ViewOrder = ({ Id }) => {
   const [orderData, setOrderData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -13,7 +13,7 @@ const ViewOrder = ({ orderId }) => {
 
       try {
         const response = await axios.get(
-          `Api plus id of the product/${orderId}`
+          `https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/retrieve${Id}`
         );
         setOrderData(response.data);
       } catch (error) {
@@ -24,7 +24,7 @@ const ViewOrder = ({ orderId }) => {
     };
 
     fetchData();
-  }, [orderId]);
+  }, [Id]);
 
   if (isLoading) {
     return <div className="text-center">Loading order details...</div>;

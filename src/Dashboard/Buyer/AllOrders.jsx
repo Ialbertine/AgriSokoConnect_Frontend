@@ -25,6 +25,9 @@ const AllOrder = () => {
   const [orderData, setOrderData] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
 
+
+  // Fetch Orders or retrieve functionality of orders
+
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -34,7 +37,7 @@ const AllOrder = () => {
       setTimeout(() => {
         setSuccessMessage("");
         window.location.reload();
-      }, 2000); // Adjust the time as needed
+      }, 2000); 
     }
   }, [successMessage]);
 
@@ -67,36 +70,48 @@ const AllOrder = () => {
     }
   };
 
+  // Delete functionality for Orders
+
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
         throw new Error("Authorization token not found");
       }
+
       const response = await axios.delete(
-        `https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/delete/{id}`,
+        `https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/order/delete/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+
       if (response.status === 200) {
         setSuccessMessage("Order deleted successfully");
+        setOrderData((prevOrders) =>
+          prevOrders.filter((order) => order._id !== id)
+        );
+      } else {
+        console.error("Error deleting order:", response.data);
+        setError(
+          "An error occurred while deleting the order. Please try again."
+        );
       }
-      setOrderData((prevOrders) =>
-        prevOrders.filter((order) => order._id !== id)
-      );
     } catch (error) {
       console.error("Error deleting order:", error);
       setError(error.message);
     }
   };
 
+
+    // Update functionality for Orders
+
   const handleEdit = (id) => {
-    setEditingOrderId(id);
-    const order = orderData.find((order) => order._id === id);
-    setEditedOrder(order);
+      setEditingOrderId(id);
+      const order = orderData.find((order) => order._id === id);
+      setEditedOrder(order);
   };
 
   const handleSaveEdit = async () => {
@@ -153,6 +168,8 @@ const AllOrder = () => {
       }));
     }
   };
+  
+  // Payment functionality for Orders
 
   const handlePayment = async () => {
     const token = localStorage.getItem("token");
@@ -180,14 +197,30 @@ const AllOrder = () => {
       console.error("Error initiating payment:", error);
     }
   };
+  
+  // Filter orders based on product name, type or shipping address on search query
 
-  const filteredOrders = Array.isArray(orderData)
-    ? orderData.filter(
-        (order) =>
-          order.customer &&
-          order.customer.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : [];
+ const filteredOrders = Array.isArray(orderData)
+   ? orderData.filter(
+       (order) =>
+         // Filter by product name
+         (order.selectedStockItems &&
+           order.selectedStockItems.some((item) =>
+             item.NameOfProduct.toLowerCase().includes(
+               searchQuery.toLowerCase()
+             )
+           )) ||
+         // Filter by type of the product 
+         (order.selectedStockItems &&
+           order.selectedStockItems.some((item) =>
+             item.typeOfProduct
+               .toLowerCase()
+               .includes(searchQuery.toLowerCase())
+           )) ||
+         // Filter by shipping address
+         order.shippingAddress.toLowerCase().includes(searchQuery.toLowerCase())
+     )
+   : [];
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
@@ -221,6 +254,9 @@ const AllOrder = () => {
           onChange={handleSearch}
           style={{ width: 300 }}
         />
+      </div>
+      <div className="text-xl mb-2 mt-2">
+        {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
       </div>
       <Grid container spacing={2}>
         {filteredOrders.map((order) => (
@@ -338,7 +374,6 @@ const AllOrder = () => {
           >
             {isLoading ? "Saving..." : "Save Changes"}
           </Button>
-          {successMessage && <p style={{ color: "red" }}>{successMessage}</p>}
         </div>
       )}
     </div>
