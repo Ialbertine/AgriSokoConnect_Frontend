@@ -12,7 +12,7 @@ const Home = () => {
       <div>
         <div className='relative'>
           <img src='logincp.jpg' className=' lg:h-[100vh] md:h-[90vh] sm:h-[100vh] w-full object-cover'></img>
-          <div className='text-white mt-[10rem] absolute lg:top-24 md:top-14 sm:top-14 lg:left-48 md:left-20 sm:left-10 flex flex-col lg:gap-10 md:gap-7 sm:gap-5'>
+          <div className='text-white mt-[10rem] absolute lg:top-18 md:top-14 sm:top-14 lg:left-48 md:left-20 sm:left-10 flex flex-col lg:gap-10 md:gap-7 sm:gap-5'>
             <p className='underline underline-offset-8'>WE'RE AGRISUPPLY CHAIN COMMUNITY</p>
             <p className='lg:text-7xl md:text-6xl sm:text-4xl lg:w-[80vh] md:w-[80vh] sm:w-[40vh]'>Welcome to AgriSoko Connect</p>
             <p className='lg:w-[70vh] md:w-[70vh] sm:w-[40vh]'>Empowering farmers, bridging markets, revolutionizing agriculture through seamless market connections</p>
@@ -105,7 +105,7 @@ const Home = () => {
                 making the whole process smooth and stress-free."
               </p>
               <div className='flex items-center gap-5'>
-                <img src='Testimonial1.jpg' className='w-20 h-20 rounded-full'></img>
+                <img src='Testimonial1.jpg' className='w-20 h-20 rounded-full object-cover'></img>
                 <div className='flex flex-col gap-1 items-center'>
                   <p className='text-2xl text-green-900 font-bold'>Marc</p>
                   <p>Farmer</p>
@@ -118,7 +118,7 @@ const Home = () => {
                 and we had interested buyers reaching out to us within hours!"
               </p>
               <div className='flex items-center gap-5'>
-                <img src='Testimonial2.jpg' className='w-20 h-20 rounded-full'></img>
+                <img src='Testimonial2.jpg' className='w-20 h-20 rounded-full object-cover'></img>
                 <div className='flex flex-col gap-1'>
                   <p className='text-2xl text-green-900 font-bold'>Tarisa</p>
                   <p>Cooperative manager</p>

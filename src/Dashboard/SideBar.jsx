@@ -7,6 +7,16 @@ import { SlSettings } from "react-icons/sl";
 import { RiLogoutCircleLine } from "react-icons/ri";
 
 function SideBar() {
+
+    const handleLogout = () => {
+        const confirmLogout = window.confirm("Are you sure you want to log out?");
+        if (confirmLogout) {
+          localStorage.removeItem("token");
+          window.location.href = "/";
+        }
+    };
+
+
     return (
         <>
 
@@ -33,7 +43,7 @@ function SideBar() {
                         <Link to='/dashboard/admin/setting' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><SlSettings /><button>Settings</button></Link>
                     </div>
                     <div className='flex items-center gap-5'>
-                        <Link to='/login' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><RiLogoutCircleLine /><button>Log Out</button></Link>
+                        <Link to='/login' className=' flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900'><RiLogoutCircleLine /><button onClick={handleLogout}>Log Out</button></Link>
                     </div>
                 </div>
 

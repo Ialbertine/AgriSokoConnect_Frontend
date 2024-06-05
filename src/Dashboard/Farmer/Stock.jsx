@@ -9,16 +9,16 @@ const Stock = () => {
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [deletingStockId, setDeletingStockId] = useState(null); // Track the stock ID being deleted
-  const [editingStockId, setEditingStockId] = useState(null); // the stock ID being edited
+  const [deletingStockId, setDeletingStockId] = useState(null);
+  const [editingStockId, setEditingStockId] = useState(null);
   const [updatedData, setUpdatedData] = useState({});
+  const [currentStockId, setCurrentStockId] = useState(null); // New state to track the current stock ID being edited
 
   useEffect(() => {
     const fetchStock = async () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          // history.push('/login');
           return;
         }
 
@@ -29,14 +29,12 @@ const Stock = () => {
         });
 
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Network error!');
         }
 
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
           const data = await response.json();
-          console.log('Fetched data:', data);
-
           if (data && Array.isArray(data.data)) {
             setStock(data.data);
           } else {
@@ -46,7 +44,6 @@ const Stock = () => {
           throw new Error('Response is not in JSON format');
         }
       } catch (error) {
-        console.error('Error fetching stock:', error);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -58,7 +55,7 @@ const Stock = () => {
 
   const handleDeletestock = async (stockId) => {
     try {
-      setDeletingStockId(stockId); // Set the deleting stock ID
+      setDeletingStockId(stockId);
       const token = localStorage.getItem("token");
       if (!token) {
         setError('No token found, please log in');
@@ -75,38 +72,42 @@ const Stock = () => {
         throw new Error(`Failed to delete stock: ${response.statusText}`);
       }
 
-      // Removing the deleted stock from the state
       setStock((prevStock) => prevStock.filter((item) => item._id !== stockId));
     } catch (error) {
-      console.error('Error deleting stock:', error);
       setError(error.message);
     } finally {
-      setDeletingStockId(null); // Reset the deleting stock ID
+      setDeletingStockId(null);
     }
   };
 
-  // Toggle the update form 
-
-  const toggleModal = () => {
+  const toggleModal = (item) => {
+    if (item) {
+      setCurrentStockId(item._id); // Set the current stock ID being edited
+      setUpdatedData({
+        NameOfProduct: item.NameOfProduct,
+        typeOfProduct: item.typeOfProduct,
+        description: item.description,
+        quantity: item.quantity,
+        pricePerTon: item.pricePerTon
+      });
+    }
     setModal(!modal);
-  }
+  };
 
   if (modal) {
     document.body.classList.add('active-modal');
   } else {
-    document.body.classList.add('active-modal');
+    document.body.classList.remove('active-modal');
   }
 
-  // UPDATING STOCK 
-
-  const handleUpdateStock = async (stockId) => {
+  const handleUpdateStock = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
         setError('No token found, please log in');
         return;
       }
-      const response = await fetch(`http://localhost:8060/AgriSoko/stock/update/${stockId}`, {
+      const response = await fetch(`https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/stock/update/${currentStockId}`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -119,17 +120,16 @@ const Stock = () => {
         throw new Error(`Failed to update stock: ${response.statusText}`);
       }
 
-
       setStock((prevStock) =>
         prevStock.map((item) =>
-          item._id === stockId ? { ...item, ...updatedData } : item
+          item._id === currentStockId ? { ...item, ...updatedData } : item
         )
       );
       setEditingStockId(null);
       setUpdatedData({});
+      setModal(false);
     } catch (error) {
-      // console.error('Error updating stock:', error);
-      // setError(error.message);
+      setError(error.message);
     }
   };
 
@@ -137,7 +137,6 @@ const Stock = () => {
     const { name, value } = e.target;
     setUpdatedData((prevData) => ({ ...prevData, [name]: value }));
   };
-
 
   if (loading) {
     return (
@@ -226,7 +225,7 @@ const Stock = () => {
                 type="text"
                 name="NameOfProduct"
                 placeholder="Name of Product"
-                value={updatedData.NameOfProduct}
+                value={updatedData.NameOfProduct || ''}
                 onChange={handleChange}
                 className="rounded-lg py-2 px-4 text-black w-[30rem] border-2"
               />
@@ -235,7 +234,7 @@ const Stock = () => {
                 type="text"
                 name="typeOfProduct"
                 placeholder="Type of Product"
-                value={updatedData.typeOfProduct}
+                value={updatedData.typeOfProduct || ''}
                 onChange={handleChange}
                 className="rounded-lg py-2 px-4 text-black w-[30rem] border-2"
               />
@@ -244,7 +243,7 @@ const Stock = () => {
                 type="text"
                 name="description"
                 placeholder="Description"
-                value={updatedData.description}
+                value={updatedData.description || ''}
                 onChange={handleChange}
                 className="rounded-lg py-2 px-4 text-black w-[30rem] border-2"
               />
@@ -253,7 +252,7 @@ const Stock = () => {
                 type="number"
                 name="quantity"
                 placeholder="Quantity"
-                value={updatedData.quantity}
+                value={updatedData.quantity || ''}
                 onChange={handleChange}
                 className="rounded-lg py-2 px-4 text-black w-[30rem] border-2"
               />
@@ -268,7 +267,7 @@ const Stock = () => {
               />
               <button
                 className='text-white rounded-lg px-3 hover:bg-[#269553] bg-[#2d7a4a] py-1 text-lg w-[20vh] mt-3'
-                onClick={() => handleUpdateStock(editingStockId)}
+                onClick={handleUpdateStock}
               >
                 Save Updates
               </button>
