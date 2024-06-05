@@ -106,7 +106,7 @@ const Stock = () => {
         setError('No token found, please log in');
         return;
       }
-      const response = await fetch(`http://localhost:8060/AgriSoko/stock/update/${stockId}`, {
+      const response = await fetch(`https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/stock/update/${stockId}`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
