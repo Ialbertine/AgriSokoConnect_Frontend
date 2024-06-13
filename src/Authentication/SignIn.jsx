@@ -181,7 +181,7 @@ const SignIn = () => {
             {isSubmitting ? "Loading..." : "Login"}
           </button>
 
-          <div className="mb-4 text-sm">
+          <div className="mb-8 text-sm">
             <span>
               <Link
                 to="/forget"
@@ -192,12 +192,11 @@ const SignIn = () => {
             </span>
           </div>
 
-          <div className="flex items-center justify-center pb-3">
-            <hr className="w-[40%] border-[1px]" />
-            <span className="mx-2">Or</span>
+          <div className="flex items-center justify-center pb-8">
+            <hr className="w-[60%] border-[1px]" />
             <hr className="w-[40%] border-[1px]" />
           </div>
-          <div className="flex items-center justify-center pb-2">
+          {/* <div className="flex items-center justify-center pb-2">
             <button
               type="button"
               className="px-[1.5rem] border flex justify-center items-center gap-2 text-black shadow-sm shadow-slate-800 hover:text-white hover:border-[#526152] py-2 rounded-md hover:bg-[#555855] transition duration-300"
@@ -205,7 +204,7 @@ const SignIn = () => {
               <img src="google.png" alt="" className="w-7" />
               <p>Log in with Google</p>
             </button>
-          </div>
+          </div> */}
           <div className="flex items-center justify-between">
             <span className="">Don't have an account?</span>
             <span>
