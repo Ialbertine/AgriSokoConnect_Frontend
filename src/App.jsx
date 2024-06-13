@@ -30,7 +30,6 @@ import BuyerLayout from "./Dashboard/Buyer/BuyerLayout";
 import BLandingPage from "./Dashboard/Buyer/BLandingPage";
 import AllOrders from "./Dashboard/Buyer/AllOrders";
 import Create from "./Dashboard/Buyer/Create";
-import ViewOrder from "./Dashboard/Buyer/ViewOrder";
 import Support from "./Dashboard/Buyer/Support";
 import BuyerProfile from "./Dashboard/Buyer/Profile";
 import News from "./Dashboard/Buyer/News";
@@ -105,7 +104,6 @@ const App = () => {
               <Route path="create" element={<Create />} />
               <Route path="profile" element={<BuyerProfile />} />
               <Route path="news" element={<News />} />
-              <Route path="view" element={<ViewOrder />} />
               <Route path="support" element={<Support />} />
             </Route>
           </Route>

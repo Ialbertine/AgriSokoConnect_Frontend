@@ -49,11 +49,12 @@ const Reset = () => {
         url: "https://agrisokoconnect-backend-ipza.onrender.com/AgriSoko/user/resetPassword",
         data: {
           password: password,
+          id: founderUser.id,
         },
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
+      });
 
       console.log(response.data);
 

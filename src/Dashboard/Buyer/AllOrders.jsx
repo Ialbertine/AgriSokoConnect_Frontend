@@ -11,8 +11,6 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import { Link } from "react-router-dom";
 import { FaAmazonPay } from "react-icons/fa";
 import axios from "axios";
 
@@ -312,11 +310,6 @@ const AllOrder = () => {
                   <IconButton onClick={() => handleEdit(order._id)}>
                     <EditIcon color="primary" />
                   </IconButton>
-                  <Link to="/dashboard/buyer/view">
-                    <IconButton>
-                      <VisibilityIcon color="primary" />
-                    </IconButton>
-                  </Link>
                 </div>
               </CardContent>
             </Card>
