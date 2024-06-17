@@ -269,7 +269,7 @@ const FirstPage = () => {
     // PIECHART data 
 
     const PieData = [
-        { name: 'Users', value: users },
+        { name: 'Users', value: users-2 },
         { name: 'Stocks', value: stock },
         { name: 'Orders', value: orders },
     ]

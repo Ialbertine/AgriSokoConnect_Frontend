@@ -1,14 +1,14 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { VscLoading } from "react-icons/vsc";
 import Accordion from './Accordion';
 
 const Farmers = () => {
 
-
   const [farmers, setFarmers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [expandedFarmers, setExpandedFarmers] = useState({});
 
   useEffect(() => {
     const fetchFarmers = async () => {
@@ -35,6 +35,13 @@ const Farmers = () => {
 
     fetchFarmers();
   }, []);
+
+  const toggleReadMore = (index) => {
+    setExpandedFarmers((prevState) => ({
+      ...prevState,
+      [index]: !prevState[index],
+    }));
+  };
 
   if (loading) {
     return (
@@ -85,21 +92,33 @@ const Farmers = () => {
                   <li key={index} className=' lg:w-[50vh] md:w-[40vh] sm:w-[39vh] border shadow-md shadow-slate-400 py-3 px-5 flex flex-col gap-3'>
                     <h2 className='text-2xl font-bold'>{farmer.farmer.toUpperCase()}</h2>
                     <p className='text-lg font-thin'>My farming efforts focus on growing:</p>
-                    <ul className='flex flex-col'>
-                      {farmer.stock.map((product) => (
-                        <div>
-                          <li key={product._id} className='list'>
-                            <img src={product.image} className='h-[25vh] w-full object-cover pb-3'></img>
-                            <Accordion title={product.NameOfProduct.toUpperCase()}
-                              answer={' Specification: ' + product.typeOfProduct}
-                              answer1={' Quantity: ' + product.quantity + ' ton'}
-                              answer2={' Price per ton: ' + product.pricePerTon + ' RWF'}
-                              answer3={' Description: ' + product.description}
-                            />
-                          </li>
-                        </div>
-                      ))}
-                    </ul>
+                    {farmer.stock.length === 0 ? (
+                      <p className='text-red-500 flex justify-center items-center mt-14'>No stock available for this farmer !</p>
+                    ) : (
+                      <ul className='flex flex-col'>
+                        {farmer.stock.slice(0, expandedFarmers[index] ? farmer.stock.length : 1).map((product) => (
+                          <div key={product._id}>
+                            <li className='list'>
+                              <img src={product.image} className='h-[25vh] w-full object-cover pb-3'></img>
+                              <Accordion title={product.NameOfProduct.toUpperCase()}
+                                answer={' Specification: ' + product.typeOfProduct}
+                                answer1={' Quantity: ' + product.quantity + ' ton'}
+                                answer2={' Price per ton: ' + product.pricePerTon + ' RWF'}
+                                answer3={' Description: ' + product.description}
+                              />
+                            </li>
+                          </div>
+                        ))}
+                      </ul>
+                    )}
+                    {farmer.stock.length > 1 && (
+                      <button 
+                        className='text-blue-500 underline'
+                        onClick={() => toggleReadMore(index)}
+                      >
+                        {expandedFarmers[index] ? 'Show Less' : 'Show all their stock'}
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -111,4 +130,4 @@ const Farmers = () => {
   )
 }
 
-export default Farmers
+export default Farmers;

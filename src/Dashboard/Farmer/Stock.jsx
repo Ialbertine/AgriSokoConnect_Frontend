@@ -185,7 +185,7 @@ const Stock = () => {
         <ul>
           {stock.map((item) => (
             <li key={item._id} className='border-b flex gap-5 items-center border-gray-200 py-4'>
-              <strong className='pr-5 w-[15vh]'>{item.NameOfProduct}<img src={item.image} className='rounded-sm pt-1 object-cover h-[10vh]'></img></strong>
+              <strong className='pr-5 w-[15vh] '>{item.NameOfProduct}<img src={item.image} className='rounded-sm pt-1 object-cover w-[15vh] h-[10vh]'></img></strong>
               <div className='w-[30vh]'>{item.typeOfProduct}</div>
               <div className='w-[35vh]'>{item.description}</div>
               <div className='w-[15vh]'>{item.quantity} tons</div>
@@ -268,8 +268,10 @@ const Stock = () => {
               <button
                 className='text-white rounded-lg px-3 hover:bg-[#269553] bg-[#2d7a4a] py-1 text-lg w-[20vh] mt-3'
                 onClick={handleUpdateStock}
+                disabled={loading}
               >
-                Save Updates
+                {!loading && "Save Updates"}
+                {loading && "Saving..."}
               </button>
             </div>
 

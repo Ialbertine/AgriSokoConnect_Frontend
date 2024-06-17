@@ -68,7 +68,7 @@ function AllTransaction() {
       justifyContent="center"
       alignItems="center"
       flexDirection="column"
-      style={{ height: "100vh" }}
+      style={{ height: "80vh" }}
     >
       <h1 style={{ textAlign: "center", 
       marginBottom: "20px", 

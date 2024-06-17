@@ -70,9 +70,6 @@ const GLandingPage = () => {
         <strong>Provide answer</strong>
         <div>
           <form className='flex flex-col gap-3 items-start'>
-            {/* <input type='text' placeholder='Names' className='px-5 py-3 border-2 rounded-lg w-[48vh]'></input>
-            <input type='text' placeholder='Cooperative (optional)' className='px-5 py-3 border-2 rounded-lg w-[48vh]'></input>
-            <input type='email' placeholder='Email' className='px-5 py-3 border-2 rounded-lg w-[48vh]'></input> */}
             <textarea className='h-[20vh] px-5 py-3 border-2 rounded-lg w-[78vh]' placeholder="Provide the answer for this farmer's question"></textarea>
             <button className='text-white rounded-lg px-4 bg-[#269553] hover:bg-[#2d7a4a] p-1'>Post</button>
           </form>
@@ -82,7 +79,7 @@ const GLandingPage = () => {
         <input
           type="text"
           placeholder="Search farmers..."
-          className="p-2 mb-4 border rounded"
+          className="p-2 mb-4 w-[60vh] border rounded"
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>

@@ -54,6 +54,7 @@ const UploadProduct = () => {
       const data = await response.data;
       console.log(data);
       setMessage({ type: 'success', content: 'Stock added successfully' });
+      navigate('/dashboard/farmer/stock')
     } catch (error) {
       console.error("Error uploading to stock:", error);
       setMessage({ type: 'error', content: 'Failed to upload stock' });
