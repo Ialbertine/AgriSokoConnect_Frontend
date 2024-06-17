@@ -9,7 +9,7 @@ function Accordion({title, answer, answer1, answer2, answer3}) {
     <div className='px-3'>
         <button onClick={() => setMoreContent(!moreContent)} className='flex items-center w-full justify-between'>
             <span>{title}</span>
-            {moreContent ? <span className='text-blue-600'>less</span> : <span className='text-blue-600'>Read more</span>}
+            {moreContent ? <span className='text-blue-600'>Close</span> : <span className='text-blue-600'>View details</span>}
         </button>
         <div className={`grid overflow-hidden transition-all duration-300 ease-in-out text-gray-500 text-sm ${
 

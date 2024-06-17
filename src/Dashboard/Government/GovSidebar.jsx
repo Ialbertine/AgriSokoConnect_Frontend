@@ -48,15 +48,6 @@ function GovSidebar() {
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-5">
             <Link
-              to="/dashboard/goverment/setting"
-              className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
-            >
-              <IoMdSettings />
-              <button>Setting</button>
-            </Link>
-          </div>
-          <div className="flex items-center gap-5">
-            <Link
               to="/login"
               className=" flex items-center gap-2 px-3 py-1 rounded-xl hover:text-white hover:bg-green-900"
             >

@@ -11,7 +11,7 @@ const Contact = () => {
   const [message, setMessage] = useState("");
 
   const [responseMessage, setResponseMessage] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(""); 
   const [isSubmitting, setIsSubmitting] = useState(false); 
 
   const handleSubmit = async (e) => {
