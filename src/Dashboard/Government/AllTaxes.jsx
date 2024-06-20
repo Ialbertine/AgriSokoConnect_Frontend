@@ -8,6 +8,7 @@ import {
   Typography,
   Paper,
 } from "@mui/material";
+import { format, parseISO } from "date-fns";
 
 function AllTaxes() {
   const [taxes, setTaxes] = useState([]);
@@ -63,6 +64,19 @@ function AllTaxes() {
     }
   };
 
+  const groupByMonth = (taxes) => {
+    return taxes.reduce((acc, tax) => {
+      const month = format(parseISO(tax.date), "MMMM yyyy");
+      if (!acc[month]) {
+        acc[month] = [];
+      }
+      acc[month].push(tax);
+      return acc;
+    }, {});
+  };
+
+  const taxesByMonth = groupByMonth(filteredTaxes);
+
   const columns = [
     { field: "id", headerName: "ID", width: 150 },
     { field: "userFullName", headerName: "User", width: 200 },
@@ -71,63 +85,85 @@ function AllTaxes() {
     { field: "date", headerName: "Date", width: 200 },
   ];
 
-  const rows = filteredTaxes.map((tax, index) => ({
-    id: `00${index + 1}`,
-    userFullName: tax.user ? tax.user.fullName : "Unknown",
-    type: tax.type,
-    amount: tax.amount,
-    date: new Date(tax.date).toLocaleDateString(),
-  }));
+  const generateRows = (taxes) => {
+    return taxes.map((tax, index) => ({
+      id: `00${index + 1}`,
+      userFullName: tax.user ? tax.user.fullName : "Unknown",
+      type: tax.type,
+      amount: tax.amount,
+      date: new Date(tax.date).toLocaleDateString(),
+    }));
+  };
 
   return (
     <div className="mt-[3rem]">
-    <Paper
-      elevation={3}
-      style={{
-        padding: "20px",
-        marginTop: "20px",
-        width: "80%",
-        margin: "auto",
-      }}
-    >
-      <Typography variant="h4" align="center" color="green" fontWeight="bold" fontFamily={"sans-serif"} gutterBottom>
-        Tax Transactions
-      </Typography>
-      <TextField
-        label="Search user..."
-        variant="outlined"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        style={{ marginBottom: "20px", width: "30%" }}
-      />
-      {error && <Typography style={{ color: "red" }}>{error}</Typography>}
-      {loading ? (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          height="400px"
+      <div className="ml-28 pb-10">
+        <Typography
+          variant="h4"
+          align="start"
+          color="green"
+          fontWeight="bold"
+          fontFamily={"sans-serif"}
+          gutterBottom
         >
-          <CircularProgress />
-        </Box>
-      ) : (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          flexDirection="column"
-          style={{ height: 400, width: "100%"}}
-        >
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5, 10, 20]}
-            checkboxSelection
-          />
-        </Box>
-      )}
-    </Paper>
+          Tax Transactions
+        </Typography>
+        <p>
+          This section outlines the tax expectations based on the total amount of
+          each farmer's transactions on a monthly basis.
+        </p>
+      </div>
+      <Paper
+        elevation={3}
+        style={{
+          padding: "20px",
+          marginTop: "20px",
+          width: "80%",
+          margin: "auto",
+        }}
+      >
+
+        <TextField
+          label="Search user..."
+          variant="outlined"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{ marginBottom: "20px", width: "30%" }}
+        />
+
+        {error && <Typography style={{ color: "red" }}>{error}</Typography>}
+        {loading ? (
+          <Box
+            display="flex"
+            justifyContent="start"
+            height="400px"
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          Object.keys(taxesByMonth).map((month) => (
+            <Box key={month} style={{ width: "100%", marginBottom: "40px" }}>
+              <Typography
+                variant="h5"
+                color="green"
+                fontWeight="bold"
+                fontFamily={"sans-serif"}
+                gutterBottom
+              >
+                Transactions for {month}
+              </Typography>
+              <DataGrid
+                rows={generateRows(taxesByMonth[month])}
+                columns={columns}
+                pageSize={5}
+                rowsPerPageOptions={[5, 10, 20]}
+                checkboxSelection
+                style={{ height: 400, width: "100%" }}
+              />
+            </Box>
+          ))
+        )}
+      </Paper>
     </div>
   );
 }
