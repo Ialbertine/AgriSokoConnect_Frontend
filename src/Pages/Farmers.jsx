@@ -4,7 +4,7 @@ import { VscLoading } from "react-icons/vsc";
 import Accordion from './Accordion';
 
 const Farmers = () => {
-
+ 
   const [farmers, setFarmers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
