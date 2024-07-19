@@ -12,9 +12,9 @@ const Home = () => {
       <div>
         <div className='relative'>
           <img src='logincp.jpg' className=' lg:h-[100vh] md:h-[90vh] sm:h-[100vh] w-full object-cover'></img>
-          <div className='text-white mt-[10rem] absolute lg:top-18 md:top-14 sm:top-14 lg:left-48 md:left-20 sm:left-10 flex flex-col lg:gap-10 md:gap-7 sm:gap-5'>
+          <div className='text-white mt-[10rem] absolute lg:top-0 md:top-14 sm:top-14 lg:left-48 md:left-20 sm:left-10 flex flex-col lg:gap-10 md:gap-7 sm:gap-5'>
             <p className='underline underline-offset-8'>WE'RE AGRISUPPLY CHAIN COMMUNITY</p>
-            <p className='lg:text-7xl md:text-6xl sm:text-4xl lg:w-[80vh] md:w-[80vh] sm:w-[40vh]'>Welcome to AgriSoko Connect</p>
+            <p className='lg:text-6xl md:text-6xl sm:text-4xl lg:w-[70%] md:w-[80vh] sm:w-[40vh]'>Welcome to AgriSoko Connect</p>
             <p className='lg:w-[70vh] md:w-[70vh] sm:w-[40vh]'>Empowering farmers, bridging markets, revolutionizing agriculture through seamless market connections</p>
             <div className='flex gap-8 relative'>
               <Link to='/about'><button className='bg-yellow-300 rounded-2xl text-black p-3 px-5 hover:text-white hover:bg-green-900 transition duration-300 ease-in-out'>DISCOVER MORE</button></Link>
